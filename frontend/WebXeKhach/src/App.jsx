@@ -13,6 +13,7 @@ import Login from "./Login";
 import Register from "./Register";
 import ForgotPassword from "./ForgotPassword";
 import ResetPassword from "./ResetPassword";
+import Customer from "./backend/Customer";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -21,8 +22,8 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/schedule" element={<Schedule />} />
+          <Route path="/" element={<Customer />} />
+          {/* <Route path="/schedule" element={<Schedule />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/ticket" element={<Ticket />} />
@@ -30,7 +31,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
-          <Route path="/resetpassword" element={<ResetPassword />} />
+          <Route path="/resetpassword" element={<ResetPassword />} /> */}
         </Routes>
       </Router>
     </div>
