@@ -16,9 +16,9 @@ const db = mysql.createConnection({
 
 // Đăng ký người dùng
 app.post("/signup", (req, res) => {
-    const hashedPassword = bcrypt.hashSync(req.body.password, 10);
+    const hashedPassword = bcrypt.hashSync(req.body.Password, 10);
     const userData = {
-        CCCD: req.body.CCCD,
+        MaKH: req.body.MaKH,
         HoVaTen: req.body.HoVaTen,
         NgaySinh: req.body.NgaySinh,
         DiaChi: req.body.DiaChi,
@@ -26,20 +26,19 @@ app.post("/signup", (req, res) => {
         SDT: req.body.SDT,
     };
 
-    // Thêm thông tin người dùng vào bảng NGUOIDUNG
-    const userSql = "INSERT INTO NGUOIDUNG SET ?";
+    // Thêm thông tin khách hàng vào bảng KHACHHANG
+    const userSql = "INSERT INTO KHACHHANG SET ?";
     db.query(userSql, userData, (err, result) => {
         if (err) {
-            return res.status(500).json({ error: "Error in User Registration" });
+            return res.status(500).json({ error: "Error in Customer Registration" });
         }
 
         // Tạo tài khoản
         const accountData = {
             MaTK: req.body.MaTK,
-            LoaiTK: req.body.LoaiTK,
-            UserName: req.body.UserName,
+            Email: req.body.Email,
             Password: hashedPassword,
-            CCCD: req.body.CCCD,
+            MaKH: req.body.MaKH,
         };
         
         const accountSql = "INSERT INTO TAIKHOAN SET ?";
@@ -54,8 +53,8 @@ app.post("/signup", (req, res) => {
 
 // Đăng nhập cho người dùng
 app.post("/login", (req, res) => {
-    const sql = "SELECT * FROM TAIKHOAN WHERE UserName = ?";
-    db.query(sql, [req.body.UserName], (err, data) => {
+    const sql = "SELECT * FROM TAIKHOAN WHERE Email = ?";
+    db.query(sql, [req.body.Email], (err, data) => {
         if (err) {
             return res.status(500).json({ error: "Error during login" });
         }
@@ -77,7 +76,11 @@ app.post("/login", (req, res) => {
 app.post("/khachhang", (req, res) => {
     const khachHangData = {
         MaKH: req.body.MaKH,
-        CCCD: req.body.CCCD,
+        HoVaTen: req.body.HoVaTen,
+        NgaySinh: req.body.NgaySinh,
+        DiaChi: req.body.DiaChi,
+        Email: req.body.Email,
+        SDT: req.body.SDT,
     };
     const sql = "INSERT INTO KHACHHANG SET ?";
     db.query(sql, khachHangData, (err, result) => {
@@ -102,8 +105,11 @@ app.get("/khachhang", (req, res) => {
 // Cập nhật khách hàng
 app.put("/khachhang/:id", (req, res) => {
     const khachHangData = {
-        MaKH: req.body.MaKH,
-        CCCD: req.body.CCCD,
+        HoVaTen: req.body.HoVaTen,
+        NgaySinh: req.body.NgaySinh,
+        DiaChi: req.body.DiaChi,
+        Email: req.body.Email,
+        SDT: req.body.SDT,
     };
     const sql = "UPDATE KHACHHANG SET ? WHERE MaKH = ?";
     db.query(sql, [khachHangData, req.params.id], (err) => {
@@ -130,11 +136,18 @@ app.delete("/khachhang/:id", (req, res) => {
 app.post("/nhanvien", (req, res) => {
     const nhanVienData = {
         MaNV: req.body.MaNV,
+        HoVaTen: req.body.HoVaTen,
+        NgaySinh: req.body.NgaySinh,
+        DiaChi: req.body.DiaChi,
+        Email: req.body.Email,
+        SDT: req.body.SDT,
         NgayVaoLam: req.body.NgayVaoLam,
         PhongBan: req.body.PhongBan,
         ChucVu: req.body.ChucVu,
-        TruongPhong: req.body.TruongPhong,
-        CCCD: req.body.CCCD,
+        UserName: req.body.UserName,
+        Password: bcrypt.hashSync(req.body.Password, 10),
+        Permission: req.body.Permission,
+        Role: req.body.Role,
     };
     const sql = "INSERT INTO NHANVIEN SET ?";
     db.query(sql, nhanVienData, (err, result) => {
@@ -159,12 +172,18 @@ app.get("/nhanvien", (req, res) => {
 // Cập nhật nhân viên
 app.put("/nhanvien/:id", (req, res) => {
     const nhanVienData = {
-        MaNV: req.body.MaNV,
+        HoVaTen: req.body.HoVaTen,
+        NgaySinh: req.body.NgaySinh,
+        DiaChi: req.body.DiaChi,
+        Email: req.body.Email,
+        SDT: req.body.SDT,
         NgayVaoLam: req.body.NgayVaoLam,
         PhongBan: req.body.PhongBan,
         ChucVu: req.body.ChucVu,
-        TruongPhong: req.body.TruongPhong,
-        CCCD: req.body.CCCD,
+        UserName: req.body.UserName,
+        Password: bcrypt.hashSync(req.body.Password, 10),
+        Permission: req.body.Permission,
+        Role: req.body.Role,
     };
     const sql = "UPDATE NHANVIEN SET ? WHERE MaNV = ?";
     db.query(sql, [nhanVienData, req.params.id], (err) => {
@@ -248,16 +267,15 @@ app.post("/xe", (req, res) => {
     const xeData = {
         MaXe: req.body.MaXe,
         BienSo: req.body.BienSo,
-        SoGhe: req.body.SoGhe,
         LoaiXe: req.body.LoaiXe,
-        MaBX: req.body.MaBX,
+        SoGhe: req.body.SoGhe,
     };
     const sql = "INSERT INTO XE SET ?";
     db.query(sql, xeData, (err, result) => {
         if (err) {
-            return res.status(500).json({ error: "Error creating vehicle" });
+            return res.status(500).json({ error: "Error creating bus" });
         }
-        return res.json({ message: "Vehicle created successfully", id: result.insertId });
+        return res.json({ message: "Bus created successfully", id: result.insertId });
     });
 });
 
@@ -266,7 +284,7 @@ app.get("/xe", (req, res) => {
     const sql = "SELECT * FROM XE";
     db.query(sql, (err, results) => {
         if (err) {
-            return res.status(500).json({ error: "Error fetching vehicles" });
+            return res.status(500).json({ error: "Error fetching buses" });
         }
         return res.json(results);
     });
@@ -276,16 +294,15 @@ app.get("/xe", (req, res) => {
 app.put("/xe/:id", (req, res) => {
     const xeData = {
         BienSo: req.body.BienSo,
-        SoGhe: req.body.SoGhe,
         LoaiXe: req.body.LoaiXe,
-        MaBX: req.body.MaBX,
+        SoGhe: req.body.SoGhe,
     };
     const sql = "UPDATE XE SET ? WHERE MaXe = ?";
     db.query(sql, [xeData, req.params.id], (err) => {
         if (err) {
-            return res.status(500).json({ error: "Error updating vehicle" });
+            return res.status(500).json({ error: "Error updating bus" });
         }
-        return res.json({ message: "Vehicle updated successfully" });
+        return res.json({ message: "Bus updated successfully" });
     });
 });
 
@@ -294,9 +311,9 @@ app.delete("/xe/:id", (req, res) => {
     const sql = "DELETE FROM XE WHERE MaXe = ?";
     db.query(sql, [req.params.id], (err) => {
         if (err) {
-            return res.status(500).json({ error: "Error deleting vehicle" });
+            return res.status(500).json({ error: "Error deleting bus" });
         }
-        return res.json({ message: "Vehicle deleted successfully" });
+        return res.json({ message: "Bus deleted successfully" });
     });
 });
 
@@ -306,10 +323,11 @@ app.post("/chuyenxe", (req, res) => {
     const chuyenXeData = {
         MaChuyen: req.body.MaChuyen,
         MaXe: req.body.MaXe,
-        ThoiGianDi: req.body.ThoiGianDi,
-        ThoiGianDen: req.body.ThoiGianDen,
-        DiaDiemDi: req.body.DiaDiemDi,
-        DiaDiemDen: req.body.DiaDiemDen,
+        MaBXDi: req.body.MaBXDi,
+        MaBXDen: req.body.MaBXDen,
+        NgayDi: req.body.NgayDi,
+        GioDi: req.body.GioDi,
+        SoLuongVe: req.body.SoLuongVe,
     };
     const sql = "INSERT INTO CHUYENXE SET ?";
     db.query(sql, chuyenXeData, (err, result) => {
@@ -335,10 +353,11 @@ app.get("/chuyenxe", (req, res) => {
 app.put("/chuyenxe/:id", (req, res) => {
     const chuyenXeData = {
         MaXe: req.body.MaXe,
-        ThoiGianDi: req.body.ThoiGianDi,
-        ThoiGianDen: req.body.ThoiGianDen,
-        DiaDiemDi: req.body.DiaDiemDi,
-        DiaDiemDen: req.body.DiaDiemDen,
+        MaBXDi: req.body.MaBXDi,
+        MaBXDen: req.body.MaBXDen,
+        NgayDi: req.body.NgayDi,
+        GioDi: req.body.GioDi,
+        SoLuongVe: req.body.SoLuongVe,
     };
     const sql = "UPDATE CHUYENXE SET ? WHERE MaChuyen = ?";
     db.query(sql, [chuyenXeData, req.params.id], (err) => {
@@ -359,17 +378,17 @@ app.delete("/chuyenxe/:id", (req, res) => {
         return res.json({ message: "Trip deleted successfully" });
     });
 });
-
 // CRUD cho VE
 // Tạo vé
 app.post("/ve", (req, res) => {
     const veData = {
         MaVe: req.body.MaVe,
-        MaChuyen: req.body.MaChuyen,
         MaKH: req.body.MaKH,
-        SoGhe: req.body.SoGhe,
+        MaChuyen: req.body.MaChuyen,
         NgayDat: req.body.NgayDat,
-        TinhTrang: req.body.TinhTrang,
+        GiaVe: req.body.GiaVe,
+        SoGhe: req.body.SoGhe,
+        TinhTrang: req.body.TinhTrang,  // Tình trạng vé (đã thanh toán, chưa thanh toán)
     };
     const sql = "INSERT INTO VE SET ?";
     db.query(sql, veData, (err, result) => {
@@ -394,11 +413,12 @@ app.get("/ve", (req, res) => {
 // Cập nhật vé
 app.put("/ve/:id", (req, res) => {
     const veData = {
-        MaChuyen: req.body.MaChuyen,
         MaKH: req.body.MaKH,
-        SoGhe: req.body.SoGhe,
+        MaChuyen: req.body.MaChuyen,
         NgayDat: req.body.NgayDat,
-        TinhTrang: req.body.TinhTrang,
+        GiaVe: req.body.GiaVe,
+        SoGhe: req.body.SoGhe,
+        TinhTrang: req.body.TinhTrang,  // Cập nhật tình trạng vé
     };
     const sql = "UPDATE VE SET ? WHERE MaVe = ?";
     db.query(sql, [veData, req.params.id], (err) => {
@@ -420,7 +440,10 @@ app.delete("/ve/:id", (req, res) => {
     });
 });
 
-// Chạy ứng dụng trên cổng 3001
-app.listen(3001, () => {
-    console.log("Server is running on port 3001");
+
+
+
+const port = 8081;
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
 });
