@@ -53,7 +53,7 @@ app.post("/signup", (req, res) => {
 
 // Đăng nhập cho người dùng
 app.post("/login", (req, res) => {
-    const sql = "SELECT * FROM TAIKHOAN WHERE Email = ?";
+    const sql = "SELECT * FROM taikhoan WHERE Email = ?";
     db.query(sql, [req.body.Email], (err, data) => {
         if (err) {
             return res.status(500).json({ error: "Error during login" });
