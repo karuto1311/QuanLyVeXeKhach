@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 
 const CustomerManager = () => {
-    const [customers, setCustomers] = useState([]); // Store list of customers
+    const [customers, setCustomers] = useState([]); // Lưu trữ danh sách khách hàng
     const [form, setForm] = useState({
         MaKH: '',
         HoVaTen: '',
@@ -11,19 +11,19 @@ const CustomerManager = () => {
         Email: '',
         SDT: ''
     });
-    const [editing, setEditing] = useState(null); // Track editing customer
+    const [editing, setEditing] = useState(null); // Theo dõi việc chỉnh sửa khách hàng
     const [message, setMessage] = useState('');
-    const [currentPage, setCurrentPage] = useState(1); // Current page for pagination
-    const customersPerPage = 5; // Number of customers displayed per page
+    const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
+    const customersPerPage = 5; // Số khách hàng hiển thị trên mỗi trang
 
-    // Fetch customers from the server
+    // Lấy dữ liệu các khách hàng từ server
     const fetchCustomers = useCallback(async () => {
         try {
             const response = await axios.get('http://localhost:8081/khachhang');
             setCustomers(response.data);
         } catch (error) {
-            console.error('Error fetching customers:', error);
-            setMessage('Failed to fetch customers.');
+            console.error('Lỗi khi lấy danh sách khách hàng:', error);
+            setMessage('Lỗi khi lấy danh sách khách hàng.');
         }
     }, []);
 
@@ -31,12 +31,12 @@ const CustomerManager = () => {
         fetchCustomers();
     }, [fetchCustomers]);
 
-    // Handle input change
+    // Xử lý thay đổi giá trị nhập vào form
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    // Handle form submit for adding/updating customer
+    // Xử lý gửi form thêm/cập nhật khách hàng
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -47,7 +47,7 @@ const CustomerManager = () => {
                 response = await axios.post('http://localhost:8081/khachhang', form);
             }
             if (response.status === 200 || response.status === 201) {
-                setMessage('Customer added/updated successfully!');
+                setMessage('Khách hàng đã được thêm/cập nhật thành công!');
                 setForm({
                     MaKH: '',
                     HoVaTen: '',
@@ -60,30 +60,30 @@ const CustomerManager = () => {
                 fetchCustomers();
             }
         } catch (error) {
-            console.error('Error submitting customer form:', error);
-            setMessage('Failed to add/update customer. Please try again.');
+            console.error('Lỗi khi gửi form khách hàng:', error);
+            setMessage('Không thể thêm/cập nhật khách hàng. Vui lòng thử lại.');
         }
     };
 
-    // Handle editing customer
+    // Xử lý chỉnh sửa khách hàng
     const handleEdit = (customer) => {
         setForm(customer);
         setEditing(customer.MaKH);
     };
 
-    // Handle deleting customer
+    // Xử lý xóa khách hàng
     const handleDelete = async (id) => {
         try {
             await axios.delete(`http://localhost:8081/khachhang/${id}`);
             fetchCustomers();
-            setMessage('Customer deleted successfully!');
+            setMessage('Khách hàng đã được xóa thành công!');
         } catch (error) {
-            console.error('Error deleting customer:', error);
-            setMessage('Failed to delete customer. Please try again.');
+            console.error('Lỗi khi xóa khách hàng:', error);
+            setMessage('Không thể xóa khách hàng. Vui lòng thử lại.');
         }
     };
 
-    // Handle canceling the form
+    // Xử lý hủy form
     const handleCancel = () => {
         setEditing(null);
         setForm({
@@ -98,7 +98,7 @@ const CustomerManager = () => {
 
     return (
         <div className="customer-manager">
-            <h2>Customer Manager</h2>
+            <h2>Quản lý Khách Hàng</h2>
             {message && <p className="message">{message}</p>}
             <form onSubmit={handleSubmit}>
                 <input
@@ -106,7 +106,7 @@ const CustomerManager = () => {
                     name="MaKH"
                     value={form.MaKH}
                     onChange={handleChange}
-                    placeholder="Customer ID"
+                    placeholder="Mã Khách Hàng"
                     required
                     disabled={!!editing}
                 />
@@ -115,7 +115,7 @@ const CustomerManager = () => {
                     name="HoVaTen"
                     value={form.HoVaTen}
                     onChange={handleChange}
-                    placeholder="Full Name"
+                    placeholder="Họ và Tên"
                     required
                 />
                 <input
@@ -130,7 +130,7 @@ const CustomerManager = () => {
                     name="DiaChi"
                     value={form.DiaChi}
                     onChange={handleChange}
-                    placeholder="Address"
+                    placeholder="Địa Chỉ"
                 />
                 <input
                     type="email"
@@ -145,23 +145,23 @@ const CustomerManager = () => {
                     name="SDT"
                     value={form.SDT}
                     onChange={handleChange}
-                    placeholder="Phone Number"
+                    placeholder="Số Điện Thoại"
                     required
                 />
-                <button type="submit">{editing ? 'Update' : 'Add'} Customer</button>
-                {editing && <button onClick={handleCancel}>Cancel</button>}
+                <button type="submit">{editing ? 'Cập nhật' : 'Thêm'} Khách Hàng</button>
+                {editing && <button onClick={handleCancel}>Hủy</button>}
             </form>
 
             <table>
                 <thead>
                     <tr>
-                        <th>Customer ID</th>
-                        <th>Full Name</th>
-                        <th>Date of Birth</th>
-                        <th>Address</th>
+                        <th>Mã Khách Hàng</th>
+                        <th>Họ và Tên</th>
+                        <th>Ngày Sinh</th>
+                        <th>Địa Chỉ</th>
                         <th>Email</th>
-                        <th>Phone Number</th>
-                        <th>Actions</th>
+                        <th>Số Điện Thoại</th>
+                        <th>Hành Động</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -174,8 +174,8 @@ const CustomerManager = () => {
                             <td>{customer.Email}</td>
                             <td>{customer.SDT}</td>
                             <td>
-                                <button onClick={() => handleEdit(customer)}>Edit</button>
-                                <button onClick={() => handleDelete(customer.MaKH)}>Delete</button>
+                                <button onClick={() => handleEdit(customer)}>Chỉnh sửa</button>
+                                <button onClick={() => handleDelete(customer.MaKH)}>Xóa</button>
                             </td>
                         </tr>
                     ))}
@@ -183,11 +183,11 @@ const CustomerManager = () => {
             </table>
             <div className="pagination">
                 <button disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>
-                    Previous
+                    Trước
                 </button>
-                <span>Page {currentPage}</span>
+                <span>Trang {currentPage}</span>
                 <button disabled={currentPage * customersPerPage >= customers.length} onClick={() => setCurrentPage(currentPage + 1)}>
-                    Next
+                    Tiếp theo
                 </button>
             </div>
         </div>
