@@ -2,8 +2,33 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../assets/Css/Navbar.css";
 import logo from "../assets/logo.png";
+import { useState } from "react";
+import DropDownUser from "./DropDownUser";
+import Person from "../assets/person.png";
+import "../assets/Css/DropDownUser.css";
+import Arrow from "../assets/downArrow.png"
 
 function Navbar() {
+  const [openUser, setOpenUser] = useState(false);
+  const [userData, setUserData] = useState({
+    matk: '',
+    email: '',
+    password: '',
+    makh: ''
+  });
+  const user = localStorage.getItem('user');
+    try {
+      setUserData({
+        matk: user.data.matk||'',
+        email: user.data.email||'',
+        password: user.data.password||'',
+        makh: user.data.makh||'',
+      })
+    }
+     catch (err){
+      console.log(err);
+     }
+  
   return (
     <nav className="navbar">
       <div className="navbar-top">
@@ -13,7 +38,21 @@ function Navbar() {
         <div className="logo-container">
           <img src={logo} alt="Xe Dai Nam" className="logo" />
         </div>
-        <div className="loginbtn">
+        {userData.email.length > 0 ? (
+          <div className="loginbtn">
+        <li>
+          <img src={Person}/>
+        </li>
+        <li style={{color:'white', fontWeight:'bold'}}>
+          {userData.matk}
+        </li>
+        <li>
+          <img src={Arrow} width={25} height={25} onClick={() => setOpenUser((prev)=>!prev)}/>
+        </li>   
+                   
+      </div>
+        ) : (
+          <div className="loginbtn">
           <li>
             <Link to="/login">
               <button>Đăng Nhập</button>
@@ -25,6 +64,7 @@ function Navbar() {
             </Link>
           </li>
         </div>
+        )}
       </div>
       <ul className="navbar-bottom">
         <li>
@@ -46,6 +86,9 @@ function Navbar() {
           <a href="/about">VỀ CHÚNG TÔI</a>
         </li>
       </ul>
+      {
+         openUser && <DropDownUser/>
+      } 
     </nav>
   );
 }

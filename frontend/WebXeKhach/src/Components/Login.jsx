@@ -13,11 +13,16 @@ function Login() {
     e.preventDefault();
     try {
       const res = await axios.post('http://localhost:8081/login', { email, password });
-      localStorage.setItem('user',res.data.user);
-      navigate('/schedule')
+      localStorage.setItem('user',res.data.user);  
+      if(res.data.user)
+        navigate('/schedule');
+      else 
+      console.error(JSON.stringify(res));
+      console.error(email);
     } 
     catch (err) {
       console.error('Login error:', err.response?.data);
+      console.log(err);
     }
   };
   return (
