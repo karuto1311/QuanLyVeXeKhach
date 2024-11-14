@@ -13,6 +13,12 @@ import Login from "./Login";
 import Register from "./Register";
 import ForgotPassword from "./ForgotPassword";
 import ResetPassword from "./ResetPassword";
+
+import QlyBen from "./QlyBen";
+import AddNewStation from "./AddNewStation";
+import BusTicketSelection from "./BusTicketSelection";
+import BusTicketForm from "./BusTicketForm";
+
 import CRUDCustomer from "./backend/CRUDCustomer";
 import CRUDEmployee from "./backend/CRUDEmployee";
 import CRUDBusStation from "./backend/CRUDBusStation";
@@ -22,7 +28,6 @@ import CRUDBusTrip from "./backend/CRUDBusTrip";
 import CRUDTripParticipants from "./backend/CRUDTripParticipants";
 import CRUDTicket from "./backend/CRUDTicket";
 
-
 function App() {
   const [count, setCount] = useState(0);
 
@@ -30,7 +35,7 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/" element={<Home />} /> 
+          <Route path="/" element={<Home />} />
           <Route path="/schedule" element={<Schedule />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
@@ -39,7 +44,13 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
-          <Route path="/resetpassword" element={<ResetPassword />} /> 
+          <Route path="/resetpassword" element={<ResetPassword />} />
+
+          <Route path="/busticketselection" element={<BusTicketSelection />} />
+          <Route path="/busticketform" element={<BusTicketForm />} />
+
+          <Route path="/qlyben" element={<QlyBen />} />
+          <Route path="/addnewstation" element={<AddNewStation />} />
           {/*<Route path="/" element={<CRUDCustomer />} />
           <Route path="/" element={<CRUDEmployee />} />
           <Route path="/" element={<CRUDBusStation />} />
@@ -48,6 +59,17 @@ function App() {
           <Route path="/" element={<CRUDBusStation />} />
           <Route path="/" element={<CRUDTripParticipants />} />
           <Route path="/" element={<CRUDTicket />} />*/}
+
+          {/*<Route path="/" element={<Home />} />
+          <Route path="/schedule" element={<Schedule />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/ticket" element={<Ticket />} />
+          <Route path="/news" element={<News />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgotpassword" element={<ForgotPassword />} />
+          <Route path="/resetpassword" element={<ResetPassword />} />*/}
         </Routes>
       </Router>
     </div>
