@@ -1,12 +1,12 @@
 import React from "react";
-import NavbarUser from "./Components/NavbarUser";
+// import NavbarUser from "./Components/NavbarUser";
 import Footer from "./Components/Footer";
 import AddNewStation from "./Components/AddNewStation";
 
 function AddNewStationPage() {
   return (
     <div className="AddNewStation">
-      <NavbarUser />
+      {/* <NavbarUser /> */}
       <AddNewStation />
       <Footer />
     </div>
