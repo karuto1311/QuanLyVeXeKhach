@@ -2,6 +2,7 @@ const express = require("express");
 const mysql = require("mysql");
 const cors = require("cors");
 const bcrypt = require("bcrypt"); // For password hashing
+const { randomInt } = require("crypto");
 
 const app = express();
 app.use(cors());
@@ -12,61 +13,103 @@ const db = mysql.createConnection({
     user: "root",
     password: "",
     database: "quanlyvexekhach",
+   
 });
 
-// Đăng ký người dùng
-app.post("/signup", (req, res) => {
-    const hashedPassword = bcrypt.hashSync(req.body.Password, 10);
-    const userData = {
-        MaKH: req.body.MaKH,
-        HoVaTen: req.body.HoVaTen,
-        NgaySinh: req.body.NgaySinh,
-        DiaChi: req.body.DiaChi,
-        Email: req.body.Email,
-        SDT: req.body.SDT,
-    };
-
-    // Thêm thông tin khách hàng vào bảng KHACHHANG
-    const userSql = "INSERT INTO KHACHHANG SET ?";
-    db.query(userSql, userData, (err, result) => {
-        if (err) {
-            return res.status(500).json({ error: "Error in Customer Registration" });
-        }
-
-        // Tạo tài khoản
-        const accountData = {
-            MaTK: req.body.MaTK,
-            Email: req.body.Email,
-            Password: hashedPassword,
-            MaKH: req.body.MaKH,
-        };
-        
-        const accountSql = "INSERT INTO TAIKHOAN SET ?";
-        db.query(accountSql, accountData, (err) => {
+// Hàm kiểm tra sự tồn tại của MaKH
+const checkUniqueMaKH = (maKH) => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM KHACHHANG WHERE MaKH = ?";
+        db.query(sql, [maKH], (err, data) => {
             if (err) {
-                return res.status(500).json({ error: "Error in Account Creation" });
+                return reject(err);
             }
-            return res.json("Signup Success");
+            if (data.length > 0) {
+                resolve(false); // Mã KH đã tồn tại
+            } else {
+                resolve(true); // Mã KH chưa tồn tại
+            }
         });
     });
+};
+
+// Đăng ký người dùng
+app.post("/signup", async (req, res) => {
+    try {
+        // Mã hóa mật khẩu
+        const hashedPassword = bcrypt.hashSync(req.body.Password, 10);
+
+        // Tạo mã khách hàng ngẫu nhiên
+        let MaKH = randomInt(100000, 999999); // Tạo mã khách hàng từ 100000 đến 999999
+        let isUnique = await checkUniqueMaKH(MaKH);
+
+        // Kiểm tra mã khách hàng duy nhất
+        while (!isUnique) {
+            MaKH = randomInt(100000, 999999); // Tạo lại mã nếu trùng
+            isUnique = await checkUniqueMaKH(MaKH);
+        }
+        let MaTK = randomInt(100000, 999999); // Tạo mã khách hàng từ 100000 đến 999999
+        let isUnique2 = await checkUniqueMaKH(MaTK);
+        while (!isUnique2) {
+            MaTK = randomInt(100000, 999999); // Tạo lại mã nếu trùng
+            isUnique = await checkUniqueMaKH(MaTK);
+        }
+        // Lưu thông tin khách hàng vào cơ sở dữ liệu
+        const userData = {
+            MaKH: MaKH,
+            HoVaTen: req.body.HoVaTen,
+            NgaySinh: req.body.NgaySinh,
+            DiaChi: req.body.DiaChi,
+            Email: req.body.Email,
+            SDT: req.body.SDT,
+        };
+
+        const userSql = "INSERT INTO KHACHHANG SET ?";
+        db.query(userSql, userData, (err, result) => {
+            if (err) {
+                return res.status(500).json({ error: "Error in Customer Registration" });
+            }
+
+            // Tạo tài khoản
+            const accountData = {
+                MaTK: MaTK,
+                Email: req.body.Email,
+                Password: hashedPassword,
+                MaKH: MaKH,
+            };
+
+            const accountSql = "INSERT INTO TAIKHOAN SET ?";
+            db.query(accountSql, accountData, (err) => {
+                if (err) {
+                    return res.status(500).json({ error: "Error in Account Creation" });
+                }
+                return res.json("Signup Success");
+            });
+        });
+    } catch (error) {
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
 });
 
 // Đăng nhập cho người dùng
 app.post("/login", (req, res) => {
-    const sql = "SELECT * FROM TAIKHOAN WHERE EMAIL = ?";
-    db.query(sql, [req.body.Email], (err, data) => {
+    const { Email, Password } = req.body; // Sử dụng req.body để lấy email và password
+
+    const sql = "SELECT * FROM TAIKHOAN WHERE Email = ?";
+    db.query(sql, [Email], (err, data) => {
         if (err) {
             return res.status(500).json({ error: "Error during login" });
         }
+
         if (data.length > 0) {
-            const match = bcrypt.compareSync(req.body.Password, data[0].Password);
+            const match = bcrypt.compareSync(Password, data[0].Password);
             if (match) {
-                return res.json({ status: "Success", User: data[0] });
+                return res.json({ status: "Success", user: data[0] });
             } else {
-                return res.json("Invalid credentials");
+                return res.status(400).json({ message: "Invalid credentials" });
             }
         } else {
-            return res.json("User not found");
+            return res.status(404).json({ message: "User not found" });
         }
     });
 });
