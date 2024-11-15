@@ -14,6 +14,7 @@ import Register from "./Register";
 import ForgotPassword from "./ForgotPassword";
 import ResetPassword from "./ResetPassword";
 
+import HomeAdmin from "./HomeAdmin";
 import QlyBen from "./QlyBen";
 import AddNewStation from "./AddNewStation";
 import BusTicketSelection from "./BusTicketSelection";
@@ -46,6 +47,7 @@ function App() {
           <Route path="/forgotpassword" element={<ForgotPassword />} />
           <Route path="/resetpassword" element={<ResetPassword />} />
 
+          <Route path="/homeadmin" element={<HomeAdmin />} />
           <Route path="/busticketselection" element={<BusTicketSelection />} />
           <Route path="/busticketform" element={<BusTicketForm />} />
 
