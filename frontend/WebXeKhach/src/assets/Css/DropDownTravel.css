@@ -1,0 +1,14 @@
+.dropDownTravel {
+    position: absolute;
+    top: 14rem;
+    right: 29rem;
+    width: 200px;
+    padding: 15px;
+    text-align: start;
+    font-weight: bold;
+    background-color: white;
+    border: 1px solid gray;
+}
+.dropDownTravel li {
+    margin: 5px;
+}

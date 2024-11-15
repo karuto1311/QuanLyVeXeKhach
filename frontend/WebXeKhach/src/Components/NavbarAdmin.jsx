@@ -3,12 +3,21 @@ import { Link } from "react-router-dom";
 import "../assets/Css/Navbar.css";
 import logo from "../assets/logo.png";
 import DropDownUser from "./DropDownUser";
+import DropDownAcc from "./DropDownAcc";
+import DropDownBus from "./DropDownBus";
+import DropDownTravel from "./DropDownTravel";
 import Person from "../assets/person.png";
 import "../assets/Css/DropDownUser.css";
+import "../assets/Css/DropDownAcc.css";
+import "../assets/Css/dropDownBus.css";
+import "../assets/Css/DropDownTravel.css";
 import Arrow from "../assets/downArrow.png";
 
 function Navbar() {
   const [openUser, setOpenUser] = useState(false);
+  const [openAcc, setOpenAcc] = useState(false);
+  const [openBus, setOpenBus] = useState(false);
+  const [openTravel, setOpenTravel] = useState(false);
   const [staffData, setStaffData] = useState({
     Email:'',
     Password:'',
@@ -77,13 +86,13 @@ function Navbar() {
           <Link to="/">TRANG CHỦ</Link>
         </li>
         <li>
-          <Link >QUẢN LÝ NGƯỜI DÙNG</Link>
+          <Link onClick={() => setOpenAcc((prev) => !prev)}>QUẢN LÝ NGƯỜI DÙNG</Link>
         </li>
         <li>
-          <Link >QUẢN LÝ BẾN</Link>
+          <Link onClick={() => setOpenBus((prev) => !prev)}>QUẢN LÝ BẾN</Link>
         </li>
         <li>
-          <Link >QUẢN LÝ CHUYẾN XE</Link>
+          <Link onClick={() => setOpenTravel((prev) => !prev)}>QUẢN LÝ CHUYẾN XE</Link>
         </li>
         <li>
           <Link >QUẢN LÝ VÉ</Link>
@@ -91,6 +100,9 @@ function Navbar() {
         
       </ul>
       {openUser && <DropDownUser />}
+      {openAcc && <DropDownAcc />}
+      {openBus && <DropDownBus />}
+      {openTravel && <DropDownTravel />}
     </nav>
   );
 }

@@ -1,0 +1,14 @@
+.dropDownAcc {
+    position: absolute;
+    top: 14rem;
+    right: 60rem;
+    width: 200px;
+    padding: 15px;
+    text-align: start;
+    font-weight: bold;
+    background-color: white;
+    border: 1px solid gray;
+}
+.dropDownAcc li {
+    margin: 5px;
+}
