@@ -1,12 +1,20 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const DropDownTravel = () => {
     
     return(
         <div className='flex flex-col dropDownTravel'>
-                 <li>Quản lý chuyến xe</li>
-                 <li>Phân công nhân viên</li>
+            <li>
+                <Link to="/crudbustrip" className="dropdown-link">
+                    Quản lý chuyến xe
+                </Link>
+            </li>
+            <li>
+                <Link to="/crudtripparticipants" className="dropdown-link">
+                    Phân công nhân viên
+                </Link>
+            </li>
                    
         </div>
     )

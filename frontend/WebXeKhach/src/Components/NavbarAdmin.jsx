@@ -95,7 +95,7 @@ function Navbar() {
           <Link onClick={() => setOpenTravel((prev) => !prev)}>QUẢN LÝ CHUYẾN XE</Link>
         </li>
         <li>
-          <Link >QUẢN LÝ VÉ</Link>
+          <Link to="/crudticket">QUẢN LÝ VÉ</Link>
         </li>
         
       </ul>

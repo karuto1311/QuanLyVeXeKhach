@@ -1,14 +1,26 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const DropDownAcc= () => {
-    
-    return(
+    return (
         <div className='flex flex-col dropDownAcc'>
-                 <li>Quản lý khách hàng</li>
-                 <li>Quản lý nhân viên</li>
-                 <li>Quản lý tài khoản</li>       
+            <li>
+                <Link to="/crudcustomer" className="dropdown-link">
+                    Quản lý khách hàng
+                </Link>
+            </li>
+            <li>
+                <Link to="/crudemployee" className="dropdown-link">
+                    Quản lý nhân viên
+                </Link>
+            </li>
+            <li>
+                <Link to="/crudaccount" className="dropdown-link">
+                    Quản lý tài khoản
+                </Link>
+            </li>
         </div>
-    )
-}
-export default DropDownAcc
+    );
+};
+
+export default DropDownAcc;

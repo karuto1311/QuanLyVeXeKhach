@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 
-const CustomerManager = () => {
+const Customer = () => {
     const [customers, setCustomers] = useState([]); // Lưu trữ danh sách khách hàng
     const [form, setForm] = useState({
         MaKH: '',
@@ -194,4 +194,4 @@ const CustomerManager = () => {
     );
 };
 
-export default CustomerManager;
+export default Customer;

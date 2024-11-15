@@ -53,14 +53,16 @@ function App() {
 
           <Route path="/qlyben" element={<QlyBen />} />
           <Route path="/addnewstation" element={<AddNewStation />} />
-          {/*<Route path="/" element={<CRUDCustomer />} />
-          <Route path="/" element={<CRUDEmployee />} />
-          <Route path="/" element={<CRUDBusStation />} />
-          <Route path="/" element={<CRUDBus />} />
-          <Route path="/" element={<CRUDAccount />} />
-          <Route path="/" element={<CRUDBusStation />} />
-          <Route path="/" element={<CRUDTripParticipants />} />
-          <Route path="/" element={<CRUDTicket />} />*/}
+
+          <Route path="/crudcustomer" element={<CRUDCustomer />} />
+          <Route path="/crudemployee" element={<CRUDEmployee />} />
+          <Route path="/crudaccount" element={<CRUDAccount />} />
+          <Route path="/crudbusstation" element={<CRUDBusStation />} />
+          <Route path="/crudbus" element={<CRUDBus />} />
+          <Route path="/crudbustrip" element={<CRUDBusTrip />} />
+          <Route path="/crudtripparticipants" element={<CRUDTripParticipants />} />
+          <Route path="/crudticket" element={<CRUDTicket />} />*/
+        
 
           {/*<Route path="/" element={<Home />} />
           <Route path="/schedule" element={<Schedule />} />
