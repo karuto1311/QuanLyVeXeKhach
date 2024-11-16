@@ -14,10 +14,10 @@ function ContactContent() {
             <div className='info-content-detail'>
             <p>Địa chỉ: 458 Trường Chinh, Phường 
             13, Quận Tân Bình, TP. Hồ Chí Minh</p>
+            <p>Email: xekhachnamhai@gmail.com</p>
             <p>Website: http://namhai.vn</p>
             <p>Điện thoại: 18001508</p>
             <p>Fax: 02843512123</p>
-            <p>Email: xekhachnamhai@gmail.com</p>
             <p>Hotline: 02843512124</p>
           </div>
         </div>
@@ -27,7 +27,8 @@ function ContactContent() {
              <fieldset>
                 <input type='text' name='Hoten' placeholder='Họ và tên'/>        
                 <input type='text' name='email' placeholder='Email'/>
-                <input type='tel' name='sdt' placeholder='Số điện thoại'/>
+                <input type='text' name='sdt' placeholder='Số điện thoại'/>
+                {/* <input type='tel' name='sdt' placeholder='Số điện thoại'/> */}
                 <input type='text' name='title' placeholder='Nhập tiêu đề'/>
                 <input type='text' name='noidung' placeholder='Nhập ghi chú' style={{paddingBottom:'100px'}} />
                 <br/>

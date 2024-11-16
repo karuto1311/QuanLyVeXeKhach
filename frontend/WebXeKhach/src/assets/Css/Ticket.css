@@ -1,28 +1,74 @@
-.ticket-content{
-    padding: 20px;
-    height: fit-content;
+.ticket-content {
+    padding: 40px;
+    background-color: #f9f9f9;
+    text-align: center;
+    font-family: Arial, sans-serif;
 }
+
+h1 {
+    font-size: 32px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
 .form-ticket {
-    height: auto;
-    width: 100%;
-    background-color: #ffffff;
-    padding-bottom: 200px;
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: left;
 }
+
+.form-ticket label {
+    font-size: 16px;
+    color: #333;
+    display: block;
+    margin-bottom: 8px;
+}
+
 .form-ticket input {
-    padding: 10px;
-  font-size: 16px;
-  width: 500px;
-  border: 1px solid #ccc; 
-  border-radius: 4px; 
-  appearance: none; 
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  margin: 20px;
+    padding: 12px;
+    font-size: 16px;
+    width: calc(100% - 24px);
+    border: none;
+    border-bottom: 2px solid #ddd;
+    background-color: transparent;
+    margin-bottom: 20px;
+    transition: border-color 0.3s ease;
 }
-.button-ticket{
-    border: 1px solid #ff5722;
+
+/* Tăng khoảng cách giữa Tìm thông tin vé và Nhập số điện thoại */
+.form-ticket input:nth-of-type(2) {
+    margin-top: 30px;
+}
+
+.form-ticket input:focus {
+    outline: none;
+    border-bottom: 2px solid #ff5722;
+}
+
+.button-ticket {
+    display: block; /* Đảm bảo nút là phần tử block */
+    width: 200px; /* Đặt chiều rộng cụ thể cho nút */
+    margin: 20px auto; /* Căn giữa nút */
+    border: none;
     background-color: #ff5722;
-    border-radius: 10px;
-    color:white;
-    width: 200px;
+    border-radius: 4px;
+    color: white;
+    padding: 12px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button-ticket:hover {
+    background-color: #e64a19;
+}
+
+@media (max-width: 768px) {
+    .form-ticket input {
+        width: 100%;
+    }
+
+    .button-ticket {
+        width: 100%;
+    }
 }
