@@ -17,6 +17,7 @@ import Group from '../assets/Group.jpg';
 import Group2 from '../assets/Group_2.jpg';
 import Store from '../assets/store.jpg';
 import homeimage from '../assets/homeimage.jpg';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 
@@ -28,6 +29,7 @@ function MainContent() {
   const [randomData, setRandomData] = useState([]);
   const [popularRoutes, setPopularRoutes] = useState([]);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const shuffledData = [...randomTrips].sort(() => 0.5 - Math.random());
@@ -49,6 +51,9 @@ function MainContent() {
     setPopularRoutes(popular);
   }, []);
 
+  const handleBook = () => {
+    navigate('/busticketselection');
+  }
   const handleSearch = () => {
     if (!departure && !destination && !date) {
       setError('Vui lòng chọn ít nhất một tiêu chí tìm kiếm.');
@@ -125,6 +130,8 @@ function MainContent() {
         </div>
         <button className="search-button" onClick={handleSearch}>Tìm chuyến xe</button>
         {error && <div className="error-message">{error}</div>}
+        <br/>
+        <button className="search-button" onClick={handleBook}>Đặt vé</button>
       </div>
 
       <div className="trip-table-section">
@@ -151,6 +158,7 @@ function MainContent() {
       {filteredTrips.length > 0 && (
         <div className="search-results-section">
           <h2>Kết quả tìm kiếm</h2>
+          
           <table>
             <thead>
               <tr>

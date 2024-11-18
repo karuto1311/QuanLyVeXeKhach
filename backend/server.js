@@ -114,6 +114,29 @@ app.post("/login", (req, res) => {
     });
 });
 
+//Đăng nhập nhân viên
+app.post("/loginnv", (req, res) => {
+    const { Email, Password } = req.body; // Sử dụng req.body để lấy email và password
+
+    const sql = "SELECT * FROM NHANVIEN WHERE Email = ?";
+    db.query(sql, [Email], (err, data) => {
+        if (err) {
+            return res.status(500).json({ error: "Error during login" });
+        }
+
+        if (data.length > 0) {
+            const match = bcrypt.compareSync(Password, data[0].Password);
+            if (match) {
+                return res.json({ status: "Success", user: data[0] });
+            } else {
+                return res.status(400).json({ message: "Invalid credentials" });
+            }
+        } else {
+            return res.status(404).json({ message: "Staff not found" });
+        }
+    });
+});
+
 // CRUD cho KHACHHANG
 // Tạo khách hàng
 app.post("/khachhang", (req, res) => {
