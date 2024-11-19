@@ -4,10 +4,10 @@ import axios from 'axios';
 const ThamGiaChuyenXeManager = () => {
     const [thamGiaChuyenXe, setThamGiaChuyenXe] = useState([]); // Lưu trữ danh sách tham gia chuyến xe
     const [form, setForm] = useState({
-        MaCX: '',
-        MaNV: '',
-        ViTri: '',
-        NgayPhanCong: ''
+        MaCX:'',
+        MaNV:'',
+        ViTri:'',
+        NgayPhanCong:''
     });
     const [editing, setEditing] = useState(null); // Theo dõi việc chỉnh sửa
     const [message, setMessage] = useState('');
@@ -39,17 +39,17 @@ const ThamGiaChuyenXeManager = () => {
         e.preventDefault();
         try {
             let response;
-            if (editing) {
-                response = await axios.put(`http://localhost:8081/thamgiachuyenxe/${editing}`, form);
-            } else {
+           // if (editing) {
+           //     response = await axios.put(`http://localhost:8081/thamgiachuyenxe/${editing}`, form);
+           // } else {
                 response = await axios.post('http://localhost:8081/thamgiachuyenxe', form);
-            }
+           // }
             if (response.status === 200 || response.status === 201) {
                 setMessage('Tham gia chuyến xe đã được thêm/cập nhật thành công!');
                 setForm({
-                    MaCX: '',
-                    MaNV: '',
-                    ViTri: '',
+                    MaCX:'',
+                    MaNV:'',
+                    ViTri:'',
                     NgayPhanCong: ''
                 });
                 setEditing(null);
@@ -58,6 +58,7 @@ const ThamGiaChuyenXeManager = () => {
         } catch (error) {
             console.error('Lỗi khi gửi form tham gia chuyến xe:', error);
             setMessage('Không thể thêm/cập nhật tham gia chuyến xe. Vui lòng thử lại.');
+            console.error(form);
         }
     };
 

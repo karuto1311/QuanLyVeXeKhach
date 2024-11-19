@@ -5,12 +5,12 @@ const VehicleManager = () => {
     const [vehicles, setVehicles] = useState([]);
     const [stations, setStations] = useState([]);
     const [form, setForm] = useState({
-        BienSoXe: '',
-        LoaiXe: '',
-        SoChoNgoi: '',
-        HangSanXuat: '',
-        NamSanXuat: '',
-        MaBX: ''
+       BienSoXe:'',
+       LoaiXe:'',
+       SoChoNgoi:'',
+       HangSanXuat:'',
+       NamSanXuat:'',
+       MaBX:''
     });
     const [editing, setEditing] = useState(null);
     const [message, setMessage] = useState('');
@@ -51,8 +51,8 @@ const VehicleManager = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!form.MaBX) {
-            setMessage('Vui lòng chọn Mã Bến Xe hợp lệ.');
-            return;
+           setMessage('Vui lòng chọn Mã Bến Xe hợp lệ.');
+           return;
         }
         try {
             let response;

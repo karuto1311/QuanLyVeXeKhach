@@ -331,19 +331,19 @@ app.delete("/benxe/:id", (req, res) => {
 // Tạo xe
 app.post("/xe", (req, res) => {
     const xeData = {
-        BienSoXe:req.body.BienSoXe,
-        LoaiXe:req.data.LoaiXe,
-        SoChoNgoi:req.data.SoChoNgoi,
-        HangSanXuat:req.body.HangSanXuat,
-        NamSanXuat:req.data.NamSanXuat,
-        MaBX:req.data.MaBX
+        BienSoXe: req.data.BienSoXe,
+        LoaiXe: req.data.LoaiXe,
+        SoChoNgoi: req.data.SoCHoNgoi,
+        HangSanXuat: req.data.HangSanXuat,
+        NamSanXuat: req.data.NamSanXuat,
+        MaBX: req.data.MaBX
     };
     const sql = "INSERT INTO XE SET ?";
     db.query(sql, xeData, (err, result) => {
         if (err) {
-            return res.status(500).json({ error: "Error creating bus" });
+            return res.status(500).json({ error: "Error creating trip" });
         }
-        return res.json({ message: "Bus created successfully", id: result.insertId });
+        return res.json({ message: "Trip created successfully", id: result.insertId });
     });
 });
 
@@ -361,11 +361,13 @@ app.get("/xe", (req, res) => {
 // Cập nhật xe
 app.put("/xe/:id", (req, res) => {
     const xeData = {
-        BienSo: req.body.BienSo,
-        LoaiXe: req.body.LoaiXe,
-        SoGhe: req.body.SoGhe,
+        LoaiXe: req.data.LoaiXe,
+        SoChoNgoi: req.data.SoCHoNgoi,
+        HangSanXuat: req.data.HangSanXuat,
+        NamSanXuat: req.data.NamSanXuat,
+        MaBX: req.data.MaBX
     };
-    const sql = "UPDATE XE SET ? WHERE MaXe = ?";
+    const sql = "UPDATE XE SET ? WHERE BienSoXe = ?";
     db.query(sql, [xeData, req.params.id], (err) => {
         if (err) {
             return res.status(500).json({ error: "Error updating bus" });
@@ -376,7 +378,7 @@ app.put("/xe/:id", (req, res) => {
 
 // Xóa xe
 app.delete("/xe/:id", (req, res) => {
-    const sql = "DELETE FROM XE WHERE MaXe = ?";
+    const sql = "DELETE FROM XE WHERE BienSoXe = ?";
     db.query(sql, [req.params.id], (err) => {
         if (err) {
             return res.status(500).json({ error: "Error deleting bus" });
@@ -389,13 +391,14 @@ app.delete("/xe/:id", (req, res) => {
 // Tạo chuyến xe
 app.post("/chuyenxe", (req, res) => {
     const chuyenXeData = {
-        MaChuyen: req.body.MaChuyen,
-        MaXe: req.body.MaXe,
-        MaBXDi: req.body.MaBXDi,
-        MaBXDen: req.body.MaBXDen,
-        NgayDi: req.body.NgayDi,
-        GioDi: req.body.GioDi,
-        SoLuongVe: req.body.SoLuongVe,
+        MaCX: req.body.MaCX,
+        ThoiGianDi: req.body.ThoiGianDi,
+        ThoiGianVe: req.body.ThoiGianVe,
+        DiemDi: req.body.DiemDi,
+        DiemDen: req.body.DiemDen,
+        GiaVe: req.body.GiaVe,
+        LoaiHinhChuyenDi: req.body.LoaiHinhChuyenDi,
+        BienSoXe: req.body.BienSoXe
     };
     const sql = "INSERT INTO CHUYENXE SET ?";
     db.query(sql, chuyenXeData, (err, result) => {
@@ -420,14 +423,15 @@ app.get("/chuyenxe", (req, res) => {
 // Cập nhật chuyến xe
 app.put("/chuyenxe/:id", (req, res) => {
     const chuyenXeData = {
-        MaXe: req.body.MaXe,
-        MaBXDi: req.body.MaBXDi,
-        MaBXDen: req.body.MaBXDen,
-        NgayDi: req.body.NgayDi,
-        GioDi: req.body.GioDi,
-        SoLuongVe: req.body.SoLuongVe,
+        ThoiGianDi: req.body.ThoiGianDi,
+        ThoiGianVe: req.body.ThoiGianVe,
+        DiemDi: req.body.DiemDi,
+        DiemDen: req.body.DiemDen,
+        GiaVe: req.body.GiaVe,
+        LoaiHinhChuyenDi: req.body.LoaiHinhChuyenDi,
+        BienSoXe: req.body.BienSoXe
     };
-    const sql = "UPDATE CHUYENXE SET ? WHERE MaChuyen = ?";
+    const sql = "UPDATE CHUYENXE SET ? WHERE MaCX = ?";
     db.query(sql, [chuyenXeData, req.params.id], (err) => {
         if (err) {
             return res.status(500).json({ error: "Error updating trip" });
@@ -438,7 +442,7 @@ app.put("/chuyenxe/:id", (req, res) => {
 
 // Xóa chuyến xe
 app.delete("/chuyenxe/:id", (req, res) => {
-    const sql = "DELETE FROM CHUYENXE WHERE MaChuyen = ?";
+    const sql = "DELETE FROM CHUYENXE WHERE MaCX = ?";
     db.query(sql, [req.params.id], (err) => {
         if (err) {
             return res.status(500).json({ error: "Error deleting trip" });
@@ -508,8 +512,56 @@ app.delete("/ve/:id", (req, res) => {
     });
 });
 
+app.post("/thamgiachuyenxe", (req, res) => {
+    const parData = {
+       MaCX: req.data.MaCX,
+       MaNV: req.data.MaNV,
+       ViTri: req.data.ViTri,
+       NgayPhanCong: req.data.NgayPhanCong
+    }
+    const sql = "INSERT INTO THAMGIACHUYENXE SET ?";
+    db.query(sql, parData, (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: "Error creating ticket" });
+        }
+        return res.json({ message: "Ticket created successfully", id: result.insertId });
+    });
+});
 
+app.get("/thamgiachuyenxe", (req, res) => {
+    const sql = "SELECT * FROM THAMGIACHUYENXE";
+    db.query(sql, (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: "Error fetching trips" });
+        }
+        return res.json(results);
+    });
+});
 
+app.delete("/thamgiachuyenxe/:id", (req, res) => {
+    const sql = "DELETE FROM THAMGIACHUYENXE WHERE MaCX = ?";
+    db.query(sql, [req.params.id], (err) => {
+        if (err) {
+            return res.status(500).json({ error: "Error deleting bus" });
+        }
+        return res.json({ message: "Bus deleted successfully" });
+    });
+});
+
+app.put("/thamgiachuyenxe/:id", (req, res) => {
+    const veData = {
+       MaNV: req.data.MaNV,
+       ViTri: req.data.ViTri,
+       NgayPhanCong: req.data.NgayPhanCong  // Cập nhật tình trạng vé
+    };
+    const sql = "UPDATE THAMGIACHUYENXE SET ? WHERE MaCX= ?";
+    db.query(sql, [veData, req.params.id], (err) => {
+        if (err) {
+            return res.status(500).json({ error: "Error updating ticket" });
+        }
+        return res.json({ message: "Ticket updated successfully" });
+    });
+});
 
 const port = 8081;
 app.listen(port, () => {
