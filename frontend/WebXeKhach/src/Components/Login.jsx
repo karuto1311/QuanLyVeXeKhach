@@ -69,7 +69,7 @@ import { Link, useNavigate } from 'react-router-dom';
 function Login() {
   const [userData, setUserData] = useState({
     Email: '',
-    Password: ''
+    Password: '',
   });
   
   const navigate = useNavigate();
@@ -82,7 +82,7 @@ function Login() {
 
       if (res.data.status === 'Success') {
         // Lưu thông tin người dùng vào localStorage
-        localStorage.setItem('user', JSON.stringify(res.data.user));  
+        localStorage.setItem('user', JSON.stringify(res.data.user)); 
         navigate('/schedule'); // Điều hướng đến trang lịch trình
       } else {
         console.error("Login failed:", res.data.message);

@@ -5,12 +5,12 @@ const VehicleManager = () => {
     const [vehicles, setVehicles] = useState([]);
     const [stations, setStations] = useState([]);
     const [form, setForm] = useState({
-        BienSoXe: '',
-        LoaiXe: '',
-        SoChoNgoi: '',
-        HangSanXuat: '',
-        NamSanXuat: '',
-        MaBX: ''
+       BienSoXe:'',
+       LoaiXe:'',
+       SoChoNgoi:'',
+       HangSanXuat:'',
+       NamSanXuat:'',
+       MaBX:''
     });
     const [editing, setEditing] = useState(null);
     const [message, setMessage] = useState('');
@@ -51,8 +51,8 @@ const VehicleManager = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!form.MaBX) {
-            setMessage('Vui lòng chọn Mã Bến Xe hợp lệ.');
-            return;
+           setMessage('Vui lòng chọn Mã Bến Xe hợp lệ.');
+           return;
         }
         try {
             let response;
@@ -79,6 +79,8 @@ const VehicleManager = () => {
         } catch (error) {
             console.error('Lỗi khi gửi biểu mẫu xe:', error);
             setMessage('Không thể thêm/cập nhật xe. Vui lòng thử lại.');
+            console.error(form);
+        
         }
     };
 
@@ -165,7 +167,7 @@ const VehicleManager = () => {
                     <option value="">Chọn Mã Bến Xe</option>
                     {stations.map((station) => (
                         <option key={station.MaBX} value={station.MaBX}>
-                            {station.MaBX} - {station.TenBX}
+                            {station.MaBX} 
                         </option>
                     ))}
                 </select>
