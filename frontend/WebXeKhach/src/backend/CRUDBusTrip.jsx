@@ -114,7 +114,7 @@ const ChuyenXeManager = () => {
 
   return (
     <div className="CRUD-container-BusStation">
-      <h2>Quản lý chuyến xe</h2>
+      <h1>QUẢN LÝ CHUYẾN XE</h1>
       {message && <p className="message">{message}</p>}
       <form className="form-container-CRUDBusStation" onSubmit={handleSubmit}>
         <div className="input-row-crud">
@@ -207,6 +207,7 @@ const ChuyenXeManager = () => {
           <div className="input-group-crud">
             <label htmlFor="MaBX">Biển Số Xe:</label>
             <select
+              className="selectCRUD"
               name="BienSoXe"
               value={form.BienSoXe}
               onChange={handleChange}
