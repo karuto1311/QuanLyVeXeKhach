@@ -331,10 +331,12 @@ app.delete("/benxe/:id", (req, res) => {
 // Tạo xe
 app.post("/xe", (req, res) => {
     const xeData = {
-        MaXe: req.body.MaXe,
-        BienSo: req.body.BienSo,
-        LoaiXe: req.body.LoaiXe,
-        SoGhe: req.body.SoGhe,
+        BienSoXe:req.body.BienSoXe,
+        LoaiXe:req.data.LoaiXe,
+        SoChoNgoi:req.data.SoChoNgoi,
+        HangSanXuat:req.body.HangSanXuat,
+        NamSanXuat:req.data.NamSanXuat,
+        MaBX:req.data.MaBX
     };
     const sql = "INSERT INTO XE SET ?";
     db.query(sql, xeData, (err, result) => {

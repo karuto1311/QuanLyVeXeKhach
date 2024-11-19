@@ -79,6 +79,8 @@ const VehicleManager = () => {
         } catch (error) {
             console.error('Lỗi khi gửi biểu mẫu xe:', error);
             setMessage('Không thể thêm/cập nhật xe. Vui lòng thử lại.');
+            console.error(form);
+        
         }
     };
 
@@ -165,7 +167,7 @@ const VehicleManager = () => {
                     <option value="">Chọn Mã Bến Xe</option>
                     {stations.map((station) => (
                         <option key={station.MaBX} value={station.MaBX}>
-                            {station.MaBX} - {station.TenBX}
+                            {station.MaBX} 
                         </option>
                     ))}
                 </select>

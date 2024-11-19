@@ -109,7 +109,8 @@ function Navbar() {
     matk: '',
     email: '',
     password: '',
-    makh: ''
+    makh: '',
+    hovaten:''
   });
   
   useEffect(() => {
@@ -122,7 +123,8 @@ function Navbar() {
           matk: parsedUser.MaTK || '',
           email: parsedUser.Email || '',
           password: parsedUser.Password || '',
-          makh: parsedUser.MaKH || ''
+          makh: parsedUser.MaKH || '',
+          hovaten: parsedUser.HoVaTen ||''
         });
       } catch (err) {
         console.error('Error parsing user data from localStorage:', err);
@@ -145,7 +147,7 @@ function Navbar() {
               <img src={Person} alt="User" />
             </li>
             <li style={{ color: 'white', fontWeight: 'bold' }}>
-              {userData.matk}
+              {userData.hovaten}
             </li>
             <li>
               <img
