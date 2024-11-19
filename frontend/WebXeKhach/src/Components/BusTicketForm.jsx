@@ -308,9 +308,11 @@ const BusTicketForm = () => {
           </p>
         </div>
 
-        <button type="submit" className="submit-button">
-          Thanh Toán
-        </button>
+        <Link to="/payment">
+          <button type="submit" className="submit-button">
+            Thanh Toán
+          </button>
+        </Link>
       </form>
     </div>
   );

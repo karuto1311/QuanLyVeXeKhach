@@ -1,0 +1,180 @@
+.CRUD-container {
+  width: 80%;
+  margin: auto;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  color: #333;
+}
+
+/* .form-container-CRUDBusStation {
+  display: flex;
+  justify-content: left;
+  margin: 20px 0;
+  gap: 20px;
+} */
+.form-container-CRUDBusStation {
+  display: grid; /* Bố cục Grid */
+  grid-template-columns: 1fr; /* Một cột chính */
+  gap: 20px; /* Khoảng cách giữa các hàng */
+  margin-bottom: 20px; /* Khoảng cách dưới form */
+  width: 100%; /* Chiếm toàn bộ chiều rộng */
+}
+
+/* .form-container-CRUDBusStation input {
+  //margin: 0 5px;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+} */
+
+.input-row-crud {
+  display: grid; /* Bố cục Grid cho các hàng */
+  grid-template-columns: 1fr 1fr; /* Mỗi hàng có 2 cột */
+  gap: 20px; /* Khoảng cách giữa các cột */
+  align-items: center; /* Canh giữa các input theo chiều dọc */
+}
+
+.input-group-crud {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  /* margin-bottom: 15px; */
+}
+
+.input-group-crud input {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 100%; /* Đảm bảo input đồng bộ chiều rộng */
+  box-sizing: border-box; /* Bao gồm padding và border trong kích thước */
+}
+
+.input-group-crud label {
+  text-align: left;
+  font-weight: bold;
+  margin-bottom: 5px; /* Khoảng cách giữa nhãn và input */
+  font-size: 14px;
+  color: #333;
+}
+
+.input-group-crud input {
+  text-align: left;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* Bố trí hàng ngang cho các nút trong form */
+/* .form-buttons-CRUDBusStation {
+  display: flex;
+  justify-content: flex-start;
+  gap: 15px; 
+  margin-top: 25px;
+} */
+.form-buttons-CRUDBusStation {
+  display: flex; /* Dùng Flexbox để bố trí */
+  justify-content: flex-end; /* Canh phải các nút */
+  gap: 15px; /* Khoảng cách giữa các nút */
+  margin-top: 25px; /* Khoảng cách phía trên */
+}
+
+/* Định dạng nút hành động (Thêm mới / Cập nhật) */
+.action-button-CRUDBusStation {
+  background-color: #f37021; /* Màu nền cam cho nút hành động */
+  color: white; /* Màu chữ trắng */
+  border: none; /* Loại bỏ viền mặc định của nút */
+  padding: 8px 15px; /* Khoảng cách xung quanh chữ trong nút */
+  cursor: pointer; /* Thay đổi con trỏ thành hình tay khi hover */
+  border-radius: 4px; /* Bo tròn góc của nút */
+  font-size: 14px; /* Kích thước chữ vừa phải */
+  white-space: nowrap; /* Không cho chữ xuống hàng, giữ nguyên 1 dòng */
+}
+
+/* Định dạng nút hủy */
+.cancel-button-CRUDBusStation {
+  background-color: #dc3545; /* Màu nền đỏ cho nút hủy */
+  color: white; /* Màu chữ trắng */
+  border: none; /* Loại bỏ viền mặc định của nút */
+  padding: 8px 15px; /* Khoảng cách xung quanh chữ trong nút */
+  cursor: pointer; /* Thay đổi con trỏ thành hình tay khi hover */
+  border-radius: 4px; /* Bo tròn góc của nút */
+  font-size: 14px; /* Kích thước chữ vừa phải */
+  white-space: nowrap; /* Không cho chữ xuống hàng, giữ nguyên 1 dòng */
+}
+
+/* Hover hiệu ứng cho nút */
+.action-button-CRUDBusStation:hover {
+  background-color: #e65a00;
+}
+
+.cancel-button-CRUDBusStation:hover {
+  background-color: #c82333;
+}
+
+.create-button:hover,
+.cancel-button:hover {
+  background-color: #e05a13;
+}
+
+.station-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.station-table th,
+.station-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.station-table th {
+  background-color: #f37021;
+  color: white;
+}
+
+.detail-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin-right: 5px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.delete-button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.pagination-button {
+  padding: 5px 10px;
+  border: 1px solid #f37021;
+  background-color: white;
+  color: #f37021;
+  cursor: pointer;
+}
+
+.pagination-button:disabled {
+  cursor: not-allowed;
+  color: #ccc;
+}

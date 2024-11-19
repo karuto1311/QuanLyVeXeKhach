@@ -19,6 +19,7 @@ import QlyBen from "./QlyBen";
 import AddNewStation from "./AddNewStation";
 import BusTicketSelection from "./BusTicketSelection";
 import BusTicketForm from "./BusTicketForm";
+import Payment from "./Payment";
 
 import CRUDCustomer from "./backend/CRUDCustomer";
 import CRUDEmployee from "./backend/CRUDEmployee";
@@ -46,24 +47,24 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
           <Route path="/resetpassword" element={<ResetPassword />} />
-
+          <Route path="/payment" element={<Payment />} />
           <Route path="/homeadmin" element={<HomeAdmin />} />
           <Route path="/busticketselection" element={<BusTicketSelection />} />
           <Route path="/busticketform" element={<BusTicketForm />} />
-
           <Route path="/qlyben" element={<QlyBen />} />
           <Route path="/addnewstation" element={<AddNewStation />} />
-
           <Route path="/crudcustomer" element={<CRUDCustomer />} />
           <Route path="/crudemployee" element={<CRUDEmployee />} />
           <Route path="/crudaccount" element={<CRUDAccount />} />
           <Route path="/crudbusstation" element={<CRUDBusStation />} />
           <Route path="/crudbus" element={<CRUDBus />} />
           <Route path="/crudbustrip" element={<CRUDBusTrip />} />
-          <Route path="/crudtripparticipants" element={<CRUDTripParticipants />} />
-          <Route path="/crudticket" element={<CRUDTicket />} />*/
-        
-
+          <Route
+            path="/crudtripparticipants"
+            element={<CRUDTripParticipants />}
+          />
+          <Route path="/crudticket" element={<CRUDTicket />} />
+          */
           {/*<Route path="/" element={<Home />} />
           <Route path="/schedule" element={<Schedule />} />
           <Route path="/about" element={<About />} />

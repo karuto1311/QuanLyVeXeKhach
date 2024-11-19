@@ -1,37 +1,158 @@
-.payment-info {
+.payment-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   font-family: Arial, sans-serif;
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
+}
+
+.payment-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.payment-content {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.payment-summary {
   border: 1px solid #ccc;
+  padding: 20px;
   border-radius: 8px;
-  background-color: #f9f9f9;
+  text-align: center;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  height: fit-content;
 }
 
-.payment-info h2,
-.payment-info h3 {
-  color: #333;
+.payment-summary h4 {
+  text-align: left;
 }
 
-.payment-info p {
-  color: #666;
+.payment-summary ol li {
+  text-align: left;
 }
 
-.payment-info ul {
+/*Up date */
+.payment-methods {
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  height: fit-content;
+}
+
+.payment-methods ul {
   list-style-type: none;
   padding: 0;
+  margin: 0;
 }
 
-.payment-info ul li {
-  background: #eee;
-  margin: 5px 0;
-  padding: 5px;
+.payment-methods li {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
 }
 
-.payment-info ol {
-  padding-left: 20px;
+.payment-methods input[type="radio"] {
+  margin-right: 10px;
 }
 
-.payment-info ol li {
-  margin: 5px 0;
+.payment-methods img {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+}
+
+.total-amount {
+  font-size: 24px;
+  color: #ff5722;
+  font-weight: bold;
+}
+
+.qr-section {
+  margin-top: 10px;
+}
+
+/*Hiệu ứng mã QR*/
+.qr-code {
+  /* padding: 20px; */
+  /* margin: 10px 0; */
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.qr-image {
+  width: 300px;
+  height: 300px;
+}
+
+.qr-code::before {
+  content: "";
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 10%;
+  background: rgba(255, 255, 255, 0.2); /* Transparent scan line */
+  animation: scan 4s infinite ease-in-out; /* Adjusted animation timing */
+  border-radius: 4px; /* Rounded edges for a smoother appearance */
+}
+
+@keyframes scan {
+  0% {
+    top: -100%;
+  }
+  50% {
+    top: 100%;
+  }
+  100% {
+    top: -100%;
+  }
+}
+
+/* Styling for the right column containing information */
+.info-column-pm {
+  display: flex;
+  flex-direction: column;
+  /* gap: 20px; */
+  /* width: 30%; */
+  margin-bottom: 20px;
+}
+
+.customer-info-payment,
+.trip-info-payment,
+.price-details-payment {
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.customer-info-payment {
+  margin-top: 20px;
+}
+
+.customer-info-payment p {
+  text-align: left;
+}
+
+.trip-info-payment p {
+  text-align: left;
+}
+
+.price-details-payment p {
+  text-align: left;
+}
+
+.customer-info-payment h3,
+.trip-info-payment h3,
+.price-details-payment h3 {
+  margin-bottom: 10px;
 }
