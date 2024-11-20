@@ -8,7 +8,7 @@ function TicketContent(){
             <h1>TRA CỨU THÔNG TIN ĐẶT VÉ</h1>
             <div>Tìm thông tin vé của mình</div>
             <div className="form-ticket">
-                <form>
+                <form className="form-ticket">
                     <div>
                         Nhập số điện thoại
                         <input type="text"></input>

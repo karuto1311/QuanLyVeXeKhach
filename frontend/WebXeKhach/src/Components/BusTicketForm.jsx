@@ -1,34 +1,51 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import "../assets/Css/BusTicketForm.css";
-import { Link } from "react-router-dom";
+import { useNavigate,Link,useLocation } from "react-router-dom";
+import { Trip } from "./BusTicketSelection";
 
-const SEATS = {
-  lower: Array.from(
-    { length: 18 },
-    (_, i) => `A${(i + 1).toString().padStart(2, "0")}`
-  ),
-  upper: Array.from(
-    { length: 18 },
-    (_, i) => `B${(i + 1).toString().padStart(2, "0")}`
-  ),
+const user = JSON.parse(localStorage.getItem('user'));
+console.log("User data from localStorage:", user); // Log the whole object
+
+// Access MaKH correctly (case-sensitive)
+const maKH = user?.MaKH || null;  // Access MaKH exactly as it's stored in the user object
+console.log("Customer ID (MaKH):", maKH);  // This should now correctly output the value or null if not found
+
+if (!maKH) {
+  console.error("Customer ID (MaKH) is missing from the user data. Please check the localStorage.");
+}
+
+
+
+
+
+
+const SEATS = Array.from({ length: 36 }, (_, i) => i + 1); // 1 to 36 seat numbers
+
+// Convert seat number to label (A01 to B18)
+const seatNumberToLabel = (number) => {
+  if (number >= 1 && number <= 18) {
+    return `A${number.toString().padStart(2, "0")}`; // Lower floor seats
+  } else if (number >= 19 && number <= 36) {
+    return `B${(number - 18).toString().padStart(2, "0")}`; // Upper floor seats
+  }
+  return null; // Invalid seat number
+};
+
+// Convert seat label (A01, B01) back to seat number
+const seatLabelToNumber = (label) => {
+  if (label.startsWith("A")) {
+    return parseInt(label.slice(1), 10); // Lower floor (A01 to A18)
+  } else if (label.startsWith("B")) {
+    return 18 + parseInt(label.slice(1), 10); // Upper floor (B01 to B18)
+  }
+  return null; // Invalid seat label
 };
 
 const SEAT_PRICE = 140000; // Giá mỗi ghế
 
-const generateSeatStatus = () => {
-  const soldSeats = new Set();
-  while (soldSeats.size < 10) {
-    const randomSeat = SEATS.lower.concat(SEATS.upper)[
-      Math.floor(Math.random() * 36)
-    ];
-    soldSeats.add(randomSeat);
-  }
-  return soldSeats;
-};
-
-const BusTicketForm = () => {
+const BusTicketForm = ({ dbConnection }) => {
   const [selectedSeats, setSelectedSeats] = useState([]);
-  const [soldSeats] = useState(generateSeatStatus);
+  const [soldSeats, setSoldSeats] = useState(new Set()); // Initialize as an empty set
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -38,24 +55,66 @@ const BusTicketForm = () => {
     phone: "",
     email: "",
   }); // Lưu trữ các lỗi cho từng trường
+  const location = useLocation();
+  const navigate = useNavigate(); // Add navigate for fallback redirect
+  const { start, end, startPoint, endPoint, seatsAvailable, price, trip } = location.state || {};
 
-  const handleSeatSelection = (seat) => {
-    if (soldSeats.has(seat)) return; // Nếu ghế đã bán, không làm gì cả
-    setSelectedSeats((prevSelectedSeats) =>
-      prevSelectedSeats.includes(seat)
-        ? prevSelectedSeats.filter((s) => s !== seat)
-        : [...prevSelectedSeats, seat]
-    );
+  // Log for debugging
+ // Ensure that makh has the expected value
+
+  if (!location.state) {
+    // Optional fallback to redirect if state is undefined
+    console.warn("No trip data received, redirecting...");
+    navigate("/trip-results");
+    return null;
+  }
+
+  if (!trip) {
+    return <div>No trip selected!</div>; // Handle case when no trip data is available
+  }
+
+
+  const handleSeatSelection = (seatNumber) => {
+    if (soldSeats.has(seatNumber)) return; // Don't allow selecting a sold seat
+
+    setSelectedSeats((prevSelectedSeats) => {
+      if (prevSelectedSeats.includes(seatNumber)) {
+        // If the seat is already selected, unselect it
+        return [];
+      } else {
+        // Otherwise, select the new seat (only one seat can be selected at a time)
+        return [seatNumber];
+      }
+    });
   };
 
-  const getSeatClass = (seat) => {
-    if (soldSeats.has(seat)) return "seat sold";
-    if (selectedSeats.includes(seat)) return "seat selected";
+  useEffect(() => {
+    const fetchSoldSeats = async () => {
+      try {
+        const response = await fetch("http://localhost:8081/api/sold-seats");
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(`HTTP error! status: ${response.status}, Details: ${errorData.error}`);
+        }
+
+        const data = await response.json();
+        setSoldSeats(new Set(data)); // Convert the array of sold seats to a Set
+      } catch (error) {
+        console.error("Error fetching sold seats:", error);
+      }
+    };
+  
+    fetchSoldSeats();
+  }, []); // Empty dependency array to run once on mount
+  const getSeatClass = (seatNumber) => {
+    if (soldSeats.has(seatNumber)) return "seat sold";
+    if (selectedSeats.includes(seatNumber)) return "seat selected";
     return "seat available";
   };
 
   // Tính tổng tiền dựa trên số ghế đã chọn
   const totalAmount = selectedSeats.length * SEAT_PRICE;
+
 
   const validateName = (value) => {
     const nameRegex =
@@ -100,29 +159,52 @@ const BusTicketForm = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Kiểm tra lỗi cho toàn bộ form trước khi gửi
-    const nameError = validateName(name);
-    const phoneError = validatePhone(phone);
-    const emailError = validateEmail(email);
-
-    if (nameError || phoneError || emailError) {
-      setFormErrors({
-        name: nameError,
-        phone: phoneError,
-        email: emailError,
-      });
-      return;
-    }
-
+  
+    // Check if terms are accepted
     if (!acceptedTerms) {
       alert("Bạn cần chấp nhận điều khoản đặt vé.");
       return;
     }
-
-    alert("Đặt vé thành công!");
+  
+    // Check if a seat is selected
+    if (selectedSeats.length === 0) {
+      alert("Vui lòng chọn ít nhất một ghế.");
+      return;
+    }
+  
+    // Prepare the data to send
+    const ticketData = {
+      maCX: trip.MaCX, // Ensure this is correctly passed from the trip state
+      maKH: maKH, // Ensure user is fetched correctly from localStorage
+      viTriGheNgoi: selectedSeats,
+      giaVe: totalAmount,
+      trangThai: "Sold",
+      hinhThucThanhToan: "Momo",
+      loaiVe: "Tour Du Lich",
+    };
+  
+    // Send request to API
+    try {
+      const response = await fetch("http://localhost:8081/api/insert-ticket", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(ticketData),
+      });
+  
+      const data = await response.json();
+      if (data.success) {
+        alert("Ticket inserted successfully!");
+        navigate('/')
+      } else {
+        console.error("Error:", data);
+      }
+    } catch (error) {
+      console.error("Request failed", error);
+    }
   };
 
   return (
@@ -136,13 +218,13 @@ const BusTicketForm = () => {
           <div className="seat-floor">
             <h4>Tầng dưới</h4>
             <div className="seats">
-              {SEATS.lower.map((seat) => (
+              {SEATS.slice(0, 18).map((seatNumber) => (
                 <button
-                  key={seat}
-                  className={getSeatClass(seat)}
-                  onClick={() => handleSeatSelection(seat)}
+                  key={seatNumber}
+                  className={getSeatClass(seatNumber)}
+                  onClick={() => handleSeatSelection(seatNumber)}
                 >
-                  {seat}
+                  {seatNumberToLabel(seatNumber)} {/* Display seat label */}
                 </button>
               ))}
             </div>
@@ -151,13 +233,13 @@ const BusTicketForm = () => {
           <div className="seat-floor">
             <h4>Tầng trên</h4>
             <div className="seats">
-              {SEATS.upper.map((seat) => (
+              {SEATS.slice(18).map((seatNumber) => (
                 <button
-                  key={seat}
-                  className={getSeatClass(seat)}
-                  onClick={() => handleSeatSelection(seat)}
+                  key={seatNumber}
+                  className={getSeatClass(seatNumber)}
+                  onClick={() => handleSeatSelection(seatNumber)}
                 >
-                  {seat}
+                  {seatNumberToLabel(seatNumber)} {/* Display seat label */}
                 </button>
               ))}
             </div>
@@ -172,16 +254,21 @@ const BusTicketForm = () => {
       </div>
 
       <div className="trip-info">
-        <h3>Thông tin lượt đi</h3>
-        <p>
-          <strong>Tuyến xe:</strong> TP.HCM - Nha Trang
-        </p>
-        <p>
-          <strong>Thời gian xuất bến:</strong> 06:00 09/10/2024
-        </p>
+      <h3>Thông tin lượt đi</h3>
+      <p>
+        <strong>Tuyến xe:</strong> {startPoint} - {endPoint}
+      </p>
+      <p>
+        <strong>Thời gian xuất bến:</strong> {start}
+      </p>
+      <p>
+        <strong>Thời gian đến:</strong> {end}
+      </p>
         <p>
           <strong>Số ghế:</strong>{" "}
-          {selectedSeats.length > 0 ? selectedSeats.join(", ") : "Chưa chọn"}
+          {selectedSeats.length > 0
+          ? selectedSeats.map((seatNumber) => seatNumberToLabel(seatNumber)).join(", ")
+          : "Chưa chọn"}
         </p>
         <p>
           <strong>Tổng tiền:</strong> {totalAmount.toLocaleString("vi-VN")} VND
@@ -189,133 +276,42 @@ const BusTicketForm = () => {
       </div>
 
       <form onSubmit={handleSubmit}>
-        <div className="form-containerBusTicketForm">
-          <div className="customer-info">
-            <h3>Thông tin khách hàng</h3>
-            <label>
-              Họ và tên
-              <input
-                type="textt"
-                name="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                onBlur={handleBlur}
-                required
-              />
-              {formErrors.name && (
-                <div className="error-message">{formErrors.name}</div>
-              )}
-            </label>
-            <label>
-              Số điện thoại
-              <input
-                type="tel"
-                name="phone"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                onBlur={handleBlur}
-                required
-              />
-              {formErrors.phone && (
-                <div className="error-message">{formErrors.phone}</div>
-              )}
-            </label>
-            <label>
-              Email
-              <input
-                type="email"
-                name="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onBlur={handleBlur}
-                required
-              />
-              {formErrors.email && (
-                <div className="error-message">{formErrors.email}</div>
-              )}
-            </label>
-            <div className="terms-info">
-              <h3>Điều khoản và lưu ý</h3>
-              <p>
-                (*) Quý khách vui lòng có mặt tại bến xuất phát của xe trước ít
-                nhất 30 phút giờ xe khởi hành, mang theo thông báo đã thanh toán
-                vé thành công có chứa mã vé được gửi từ hệ thống Xe Khách Nam
-                Hải LINE. Vui lòng liên hệ Trung tâm tổng đài 02843512123 để
-                được hỗ trợ.
-              </p>
-              <p>
-                (*) Nếu quý khách có nhu cầu trung chuyển, vui lòng liên hệ Tổng
-                đài trung chuyển 02843512123 trước khi đặt vé. Chúng tôi không
-                đón/trung chuyển tại những điểm xe trung chuyển không thể tới
-                được.
-              </p>
-            </div>
-            <label>
-              <input
-                type="checkbox"
-                checked={acceptedTerms}
-                onChange={() => setAcceptedTerms(!acceptedTerms)}
-              />
-              Chấp nhận điều khoản đặt vé
-            </label>
+      <div className="form-containerBusTicketForm">
+        <div className="customer-info">
+          <div className="terms-info">
+            <h3>Điều khoản và lưu ý</h3>
+            <p>
+              (*) Quý khách vui lòng có mặt tại bến xuất phát của xe trước ít
+              nhất 30 phút giờ xe khởi hành, mang theo thông báo đã thanh toán
+              vé thành công có chứa mã vé được gửi từ hệ thống Xe Khách Nam
+              Hải LINE. Vui lòng liên hệ Trung tâm tổng đài 02843512123 để
+              được hỗ trợ.
+            </p>
+            <p>
+              (*) Nếu quý khách có nhu cầu trung chuyển, vui lòng liên hệ Tổng
+              đài trung chuyển 02843512123 trước khi đặt vé. Chúng tôi không
+              đón/trung chuyển tại những điểm xe trung chuyển không thể tới
+              được.
+            </p>
           </div>
+          <label>
+            <input
+              type="checkbox"
+              checked={acceptedTerms}
+              onChange={() => setAcceptedTerms(!acceptedTerms)} // This should toggle the value of acceptedTerms
+            />
+            Chấp nhận điều khoản đặt vé
+          </label>
         </div>
+      </div>
 
-        <div className="pickup-dropoff">
-          <h3>Thông tin đón trả</h3>
-          <div className="pickup-dropoff-container">
-            <div className="pickup-section">
-              <h4>Điểm đón</h4>
-              <label>
-                <input type="radio" name="pickup" value="Điểm đón" required />
-                Điểm đón
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="pickup"
-                  value="Trung chuyển"
-                  required
-                />
-                Trung chuyển
-              </label>
-              <input type="text" placeholder="Bến xe Nam Hải" />
-            </div>
-            <div className="separator"></div> {/* Đường kẻ dọc ngăn cách */}
-            <div className="dropoff-section">
-              <h4>Điểm trả</h4>
-              <label>
-                <input type="radio" name="dropoff" value="Điểm trả" required />
-                Điểm trả
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="dropoff"
-                  value="Trung chuyển"
-                  required
-                />
-                Trung chuyển
-              </label>
-              <input type="text" placeholder="Nha Trang" />
-            </div>
-          </div>
-          <p>
-            Quý khách vui lòng có mặt tại Bến xe/Văn Phòng{" "}
-            <strong>Bến xe Nam Hải</strong> trước{" "}
-            <strong>06:45 09/10/2024</strong> để được trung chuyển hoặc kiểm tra
-            thông tin trước khi lên xe.
-          </p>
-        </div>
-
-        <Link to="/payment">
-          <button type="submit" className="submit-button">
-            Thanh Toán
-          </button>
-        </Link>
-      </form>
+      <button type="submit" className="submit-button">
+        Thanh Toán
+      </button>
+    </form>
     </div>
   );
 };
+
 
 export default BusTicketForm;
