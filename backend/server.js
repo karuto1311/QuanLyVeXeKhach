@@ -3,6 +3,7 @@ const mysql = require("mysql2");
 const cors = require("cors");
 const bcrypt = require("bcrypt"); // For password hashing
 const { randomInt } = require("crypto");
+const { matchesGlob } = require("path");
 
 const app = express();
 app.use(cors());
@@ -565,17 +566,43 @@ app.put("/thamgiachuyenxe/:id", (req, res) => {
 
 
 app.get("/api/sold-seats", async (req, res) => {
+    console.log("Query Parameters:", req.query); // This will log all query parameters
+    console.log('MaCX:',maCX);
     try {
-      // Query the Ve table to get all ViTriGheNgoi
-      const [rows] = await db.promise().execute("SELECT ViTriGheNgoi FROM Ve WHERE TrangThai = 'Sold'");
-      
-      const soldSeats = new Set(rows.map((row) => row.ViTriGheNgoi));
-      res.json([...soldSeats]); // Send sold seats as a JSON array
+       const maCX = req.query.MaCX;
+       if (!maCX) {
+          return res.status(400).json({
+             error: "Trip ID (maCX) is required in the query string."
+          });
+       }
+ 
+       // Query the Ve table to get all ViTriGheNgoi for the specified trip (maCX)
+       const [rows] = await db.promise().execute(
+          `SELECT ViTriGheNgoi 
+           FROM Ve 
+           WHERE TrangThai = 'Sold' 
+           AND MaCX = ?`, 
+          [maCX]  // Prevent SQL injection
+       );
+ 
+       if (rows.length === 0) {
+          return res.json([]);  // No sold seats for the given trip
+       }
+ 
+       // Map the rows to extract ViTriGheNgoi and remove duplicates by using Set
+       const soldSeats = new Set(rows.map((row) => row.ViTriGheNgoi));
+ 
+       // Send back the sold seats as a JSON array
+       res.json([...soldSeats]); 
     } catch (err) {
-      console.error("Error fetching sold seats from Ve table:", err);
-      res.status(500).json({ error: "Database query failed", details: err.message });
+       console.error("Error fetching sold seats from Ve table:", err);
+       res.status(500).json({ 
+          error: "Database query failed", 
+          details: err.message 
+       });
     }
-  });
+ });
+ 
 
 // Endpoint to get trips
 app.get("/api/trips", async (req, res) => {

@@ -87,7 +87,6 @@ const BusTicketForm = ({ dbConnection }) => {
       }
     });
   };
-
   useEffect(() => {
     const fetchSoldSeats = async () => {
       try {
