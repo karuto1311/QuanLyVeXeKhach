@@ -12,7 +12,7 @@ h1 {
 }
 
 .form-ticket {
-    max-width: 600px;
+    max-width: 300px;
     margin: 0 auto;
     text-align: left;
 }
@@ -47,7 +47,7 @@ h1 {
 
 .button-ticket {
     display: block; /* Đảm bảo nút là phần tử block */
-    width: 200px; /* Đặt chiều rộng cụ thể cho nút */
+    width: 300px; /* Đặt chiều rộng cụ thể cho nút */
     margin: 20px auto; /* Căn giữa nút */
     border: none;
     background-color: #ff5722;
@@ -65,10 +65,6 @@ h1 {
 
 @media (max-width: 768px) {
     .form-ticket input {
-        width: 100%;
-    }
-
-    .button-ticket {
         width: 100%;
     }
 }

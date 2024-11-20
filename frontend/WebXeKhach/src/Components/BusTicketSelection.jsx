@@ -1,11 +1,31 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import "../assets/Css/BusTicketSelection.css";
 import { Link } from "react-router-dom";
 import bus_image from "../assets/bus_image.png";
 import icon_trash from "../assets/icon_trash.png";
+import moment from 'moment'
 
 const BusTicketSelection = () => {
   const [tripType, setTripType] = useState("one-way");
+  const [trips, setTrips] = useState([]);
+  
+
+
+  useEffect(() => {
+    const fetchTrips = async () => {
+      try {
+        const response = await fetch("http://localhost:8081/api/trips");
+        if (!response.ok) {
+          throw new Error("Failed to fetch trips");
+        }
+        const data = await response.json();
+        setTrips(data); // Update state with the fetched trip data
+      } catch (error) {
+        console.error("Error fetching trips:", error);
+      }
+    };
+    fetchTrips();
+  }, []);
 
   return (
     <div className="bus-ticket-selection">
@@ -13,11 +33,12 @@ const BusTicketSelection = () => {
       <SearchBox tripType={tripType} setTripType={setTripType} />
       <div className="filter-and-results">
         <FilterBox />
-        <TripResults />
+        <TripResults trips={trips} />
       </div>
     </div>
   );
 };
+
 
 const HeaderImage = () => (
   <div className="header-image">
@@ -143,7 +164,7 @@ const FilterGroup = ({ title, children }) => (
   </div>
 );
 
-const TripResults = () => (
+const TripResults = ({ trips }) => (
   <div className="results">
     <h4>TP. Hồ Chí Minh - Đồng Tháp</h4>
     <div className="sort-options">
@@ -151,41 +172,29 @@ const TripResults = () => (
       <button>Giờ khởi hành</button>
       <button>Ghế trống</button>
     </div>
-    <Trip
-      start="06:00"
-      end="09:00"
-      startPoint="Bến Xe Miền Tây"
-      endPoint="Bến Xe Sa Đéc"
-      seatsAvailable="31"
-      price="140.000"
-    />
-    <Trip
-      start="07:30"
-      end="10:45"
-      startPoint="Bến Xe Miền Tây"
-      endPoint="Bến Xe Sa Đéc"
-      seatsAvailable="40"
-      price="140.000"
-    />
-    <Trip
-      start="08:00"
-      end="11:30"
-      startPoint="Bến Xe Miền Tây"
-      endPoint="Bến Xe Tam Nông"
-      seatsAvailable="36"
-      price="140.000"
-    />
+    {trips.map((trip, index) => (
+      <Trip
+        key={index}
+        start={moment(trip.start).local().format("YYYY-MM-DD HH:mm:ss")} // Convert to local time
+        end={moment(trip.end).local().format("YYYY-MM-DD HH:mm:ss")} // Convert to local time
+        startPoint={trip.start_point}
+        endPoint={trip.end_point}
+        seatsAvailable={36}
+        price={trip.price}
+        trip={trip} // Pass entire trip data as prop
+      />
+    ))}
   </div>
 );
 
-const Trip = ({ start, end, startPoint, endPoint, seatsAvailable, price }) => (
+const Trip = ({ start, end, startPoint, endPoint, seatsAvailable, price, trip }) => (
   <div className="trip">
     <div className="trip-details">
       <div className="trip-row">
         <span className="trip-label">Bắt đầu</span>
         <span>{start}</span>
         <span>{startPoint}</span>
-        <span>Giường</span>
+        <span>Giường 2 Tầng</span>
       </div>
 
       <div className="trip-row">
@@ -198,11 +207,16 @@ const Trip = ({ start, end, startPoint, endPoint, seatsAvailable, price }) => (
     </div>
     <div className="trip-bottom">
       <div className="trip-price">Giá vé: {price}₫</div>
-      <Link to="/busticketform">
-        <button className="select-trip-button">Chọn chuyến</button>
+      <Link
+        to="/busticketform"
+        state={{ start, end, startPoint, endPoint, seatsAvailable, price, trip }}
+      >
+      <button className="select-trip-button">Chọn chuyến</button>
       </Link>
     </div>
   </div>
 );
 
+
+export {Trip};
 export default BusTicketSelection;

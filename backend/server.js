@@ -1,5 +1,5 @@
 const express = require("express");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const cors = require("cors");
 const bcrypt = require("bcrypt"); // For password hashing
 const { randomInt } = require("crypto");
@@ -576,6 +576,147 @@ app.put("/thamgiachuyenxe/:MaCX/:MaNV", (req, res) => {
         return res.json({ message: "Ticket updated successfully" });
     });
 });
+
+
+app.get("/api/sold-seats", async (req, res) => {
+    try {
+      // Query the Ve table to get all ViTriGheNgoi
+      const [rows] = await db.promise().execute("SELECT ViTriGheNgoi FROM Ve WHERE TrangThai = 'Sold'");
+      
+      const soldSeats = new Set(rows.map((row) => row.ViTriGheNgoi));
+      res.json([...soldSeats]); // Send sold seats as a JSON array
+    } catch (err) {
+      console.error("Error fetching sold seats from Ve table:", err);
+      res.status(500).json({ error: "Database query failed", details: err.message });
+    }
+  });
+
+// Endpoint to get trips
+app.get("/api/trips", async (req, res) => {
+    const sql = `
+      SELECT 
+        MaCX, 
+        ThoiGianDi AS start,
+        ThoiGianVe AS end,
+        DiemDi AS start_point,
+        DiemDen AS end_point,
+        GiaVe AS price,
+        LoaiHinhChuyenDi AS trip_type,
+        BienSoXe AS vehicle_number
+      FROM CHUYENXE
+    `;
+  
+    try {
+      // Use queryAsync to wrap the callback query
+      const trips = await queryAsync(sql);
+      res.json(trips); // Send the fetched data to the frontend
+    } catch (err) {
+      console.error("Error fetching trips from CHUYENXE table:", err);
+      res.status(500).json({ error: "Error fetching trips" });
+    }
+  });
+  
+
+
+app.use(express.json()); // Middleware for parsing JSON requests
+
+const queryAsync = (query, values = []) => {
+    return new Promise((resolve, reject) => {
+      db.query(query, values, (err, results) => {
+        if (err) {
+          reject(err); // Reject the promise on error
+        } else {
+          resolve(results); // Resolve the promise with the query result
+        }
+      });
+    });
+  };
+  
+// Endpoint to insert a ticket
+
+
+// Endpoint to insert a ticket
+// Endpoint to insert a ticket
+app.post("/api/insert-ticket", async (req, res) => {
+    const {
+      maCX,
+      maKH,
+      viTriGheNgoi,
+      giaVe,
+      trangThai,
+      hinhThucThanhToan,
+      loaiVe,
+    } = req.body;
+  
+    // Debugging: Log the incoming request data
+    console.log("Received ticket data:", req.body); // Check if maCX and maKH are present here
+  
+    try {
+      // Check if maCX or maKH are missing
+      if (!maCX || !maKH) {
+        return res.status(400).json({
+          success: false,
+          error: "maCX or maKH is missing in the request.",
+          missingFields: { maCX, maKH }
+        });
+      }
+  
+      // Get the last ticket's MaVe to generate the next one
+      const queryGetLastRecord = `SELECT MaVe FROM VE ORDER BY MaVe DESC LIMIT 1`;
+      const lastRecord = await queryAsync(queryGetLastRecord);
+  
+      let maVe;
+      if (lastRecord.length > 0) {
+        const lastNumber = parseInt(lastRecord[0].MaVe.slice(2), 10); // Remove "VE" prefix
+        maVe = `VE${(lastNumber + 1).toString().padStart(6, "0")}`;
+      } else {
+        maVe = "VE000001"; // First ticket if table is empty
+      }
+  
+      // Insert the ticket into the Ve table
+      const queryInsert = `
+        INSERT INTO VE (MaVe, LoaiVe, ViTriGheNgoi, GiaVe, TrangThai, HinhThucThanhToan, MaCX, MaKH)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `;
+  
+      const result = await queryAsync(queryInsert, [
+        maVe,
+        loaiVe,
+        viTriGheNgoi,
+        giaVe,
+        trangThai,
+        hinhThucThanhToan,
+        maCX,
+        maKH,
+      ]);
+  
+      res.status(201).json({
+        success: true,
+        message: "Ticket inserted successfully!",
+        maVe: maVe,
+      });
+    } catch (error) {
+      console.error("Error inserting ticket:", error);
+  
+      if (error.code === 'ER_DUP_ENTRY') {
+        return res.status(400).json({
+          success: false,
+          error: "Duplicate ticket entry.",
+          details: error.message,
+        });
+      }
+  
+      res.status(500).json({
+        success: false,
+        error: "Failed to insert ticket",
+        details: error.message,
+      });
+    }
+  });
+  
+  
+
+  
 
 const port = 8081;
 app.listen(port, () => {
