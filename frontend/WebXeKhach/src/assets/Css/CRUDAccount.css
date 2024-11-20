@@ -1,0 +1,8 @@
+.input-group-crud input {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 100%; /* Đảm bảo input đồng bộ chiều rộng */
+  box-sizing: border-box; /* Bao gồm padding và border trong kích thước */
+}

@@ -213,6 +213,7 @@ const VeManager = () => {
           <div className="input-group-crud">
             <label htmlFor="MaBX">Chọn Chuyến Xe:</label>
             <select
+              className="selectCRUD"
               name="MaCX"
               value={form.MaCX}
               onChange={handleChange}
@@ -226,9 +227,11 @@ const VeManager = () => {
               ))}
             </select>
           </div>
-          <div className="input-group-crud">
+
+          <div className="input-group-crud" style={{ color: "black" }}>
             <label htmlFor="TenBX">Chọn Khách Hàng:</label>
             <select
+              className="selectCRUD"
               name="MaKH"
               value={form.MaKH}
               onChange={handleChange}

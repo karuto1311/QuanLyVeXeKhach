@@ -1,0 +1,18 @@
+.Container-CRUD-CSS {
+  font-family: Arial, sans-serif;
+  max-width: 100%;
+  margin: 20px auto;
+  padding: 20px;
+  /* border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9; */
+}
+
+.input-group-crud input {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 100%; /* Đảm bảo input đồng bộ chiều rộng */
+  box-sizing: border-box; /* Bao gồm padding và border trong kích thước */
+}
