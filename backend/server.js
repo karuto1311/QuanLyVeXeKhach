@@ -331,19 +331,19 @@ app.delete("/benxe/:id", (req, res) => {
 // Tạo xe
 app.post("/xe", (req, res) => {
     const xeData = {
-        BienSoXe: req.data.BienSoXe,
-        LoaiXe: req.data.LoaiXe,
-        SoChoNgoi: req.data.SoCHoNgoi,
-        HangSanXuat: req.data.HangSanXuat,
-        NamSanXuat: req.data.NamSanXuat,
-        MaBX: req.data.MaBX
+        BienSoXe: req.body.BienSoXe,
+        LoaiXe: req.body.LoaiXe,
+        SoChoNgoi: req.body.SoChoNgoi,
+        HangSanXuat: req.body.HangSanXuat,
+        NamSanXuat: req.body.NamSanXuat,
+        MaBX: req.body.MaBX
     };
     const sql = "INSERT INTO XE SET ?";
     db.query(sql, xeData, (err, result) => {
         if (err) {
-            return res.status(500).json({ error: "Error creating trip" });
+            return res.status(500).json({ error: "Error creating bus", details: err.message });
         }
-        return res.json({ message: "Trip created successfully", id: result.insertId });
+        return res.status(201).json({ message: "Bus created successfully", id: result.insertId });
     });
 });
 
@@ -352,25 +352,28 @@ app.get("/xe", (req, res) => {
     const sql = "SELECT * FROM XE";
     db.query(sql, (err, results) => {
         if (err) {
-            return res.status(500).json({ error: "Error fetching buses" });
+            return res.status(500).json({ error: "Error fetching buses", details: err.message });
         }
-        return res.json(results);
+        return res.status(200).json(results);
     });
 });
 
 // Cập nhật xe
 app.put("/xe/:id", (req, res) => {
     const xeData = {
-        LoaiXe: req.data.LoaiXe,
-        SoChoNgoi: req.data.SoCHoNgoi,
-        HangSanXuat: req.data.HangSanXuat,
-        NamSanXuat: req.data.NamSanXuat,
-        MaBX: req.data.MaBX
+        LoaiXe: req.body.LoaiXe,
+        SoChoNgoi: req.body.SoChoNgoi,
+        HangSanXuat: req.body.HangSanXuat,
+        NamSanXuat: req.body.NamSanXuat,
+        MaBX: req.body.MaBX
     };
     const sql = "UPDATE XE SET ? WHERE BienSoXe = ?";
-    db.query(sql, [xeData, req.params.id], (err) => {
+    db.query(sql, [xeData, req.params.id], (err, result) => {
         if (err) {
-            return res.status(500).json({ error: "Error updating bus" });
+            return res.status(500).json({ error: "Error updating bus", details: err.message });
+        }
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: "Bus not found" });
         }
         return res.json({ message: "Bus updated successfully" });
     });
@@ -379,9 +382,12 @@ app.put("/xe/:id", (req, res) => {
 // Xóa xe
 app.delete("/xe/:id", (req, res) => {
     const sql = "DELETE FROM XE WHERE BienSoXe = ?";
-    db.query(sql, [req.params.id], (err) => {
+    db.query(sql, [req.params.id], (err, result) => {
         if (err) {
-            return res.status(500).json({ error: "Error deleting bus" });
+            return res.status(500).json({ error: "Error deleting bus", details: err.message });
+        }
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: "Bus not found" });
         }
         return res.json({ message: "Bus deleted successfully" });
     });
@@ -450,17 +456,19 @@ app.delete("/chuyenxe/:id", (req, res) => {
         return res.json({ message: "Trip deleted successfully" });
     });
 });
-// CRUD cho VE
-// Tạo vé
+
+//CRUD cho VE
+// Tạo mới vé
 app.post("/ve", (req, res) => {
     const veData = {
         MaVe: req.body.MaVe,
-        MaKH: req.body.MaKH,
-        MaChuyen: req.body.MaChuyen,
-        NgayDat: req.body.NgayDat,
-        GiaVe: req.body.GiaVe,
-        SoGhe: req.body.SoGhe,
-        TinhTrang: req.body.TinhTrang,  // Tình trạng vé (đã thanh toán, chưa thanh toán)
+        LoaiVe: req.body.LoaiVe,               
+        ViTriGheNgoi: req.body.ViTriGheNgoi,   
+        GiaVe: req.body.GiaVe,                 
+        TrangThai: req.body.TrangThai,         
+        HinhThucThanhToan: req.body.HinhThucThanhToan, 
+        MaCX: req.body.MaCX,                  
+        MaKH: req.body.MaKH                   
     };
     const sql = "INSERT INTO VE SET ?";
     db.query(sql, veData, (err, result) => {
@@ -471,7 +479,7 @@ app.post("/ve", (req, res) => {
     });
 });
 
-// Đọc danh sách vé
+// Lấy danh sách vé
 app.get("/ve", (req, res) => {
     const sql = "SELECT * FROM VE";
     db.query(sql, (err, results) => {
@@ -485,12 +493,13 @@ app.get("/ve", (req, res) => {
 // Cập nhật vé
 app.put("/ve/:id", (req, res) => {
     const veData = {
-        MaKH: req.body.MaKH,
-        MaChuyen: req.body.MaChuyen,
-        NgayDat: req.body.NgayDat,
-        GiaVe: req.body.GiaVe,
-        SoGhe: req.body.SoGhe,
-        TinhTrang: req.body.TinhTrang,  // Cập nhật tình trạng vé
+        LoaiVe: req.body.LoaiVe,             
+        ViTriGheNgoi: req.body.ViTriGheNgoi,  
+        GiaVe: req.body.GiaVe,                 
+        TrangThai: req.body.TrangThai,         
+        HinhThucThanhToan: req.body.HinhThucThanhToan, 
+        MaCX: req.body.MaCX,                 
+        MaKH: req.body.MaKH                   
     };
     const sql = "UPDATE VE SET ? WHERE MaVe = ?";
     db.query(sql, [veData, req.params.id], (err) => {
@@ -512,13 +521,15 @@ app.delete("/ve/:id", (req, res) => {
     });
 });
 
+//CRUD cho THAMGIACHUYENXE
+// Thêm nhân sự tham gia chuyến xe
 app.post("/thamgiachuyenxe", (req, res) => {
     const parData = {
-       MaCX: req.data.MaCX,
-       MaNV: req.data.MaNV,
-       ViTri: req.data.ViTri,
-       NgayPhanCong: req.data.NgayPhanCong
-    }
+        MaCX: req.body.MaCX,
+        MaNV: req.body.MaNV,
+        ViTri: req.body.ViTri,
+        NgayPhanCong: req.body.NgayPhanCong
+    };
     const sql = "INSERT INTO THAMGIACHUYENXE SET ?";
     db.query(sql, parData, (err, result) => {
         if (err) {
@@ -528,6 +539,7 @@ app.post("/thamgiachuyenxe", (req, res) => {
     });
 });
 
+// Đọc danh sách nhân sự tham gia chuyến xe
 app.get("/thamgiachuyenxe", (req, res) => {
     const sql = "SELECT * FROM THAMGIACHUYENXE";
     db.query(sql, (err, results) => {
@@ -538,24 +550,26 @@ app.get("/thamgiachuyenxe", (req, res) => {
     });
 });
 
-app.delete("/thamgiachuyenxe/:id", (req, res) => {
-    const sql = "DELETE FROM THAMGIACHUYENXE WHERE MaCX = ?";
-    db.query(sql, [req.params.id], (err) => {
+// Xóa nhân sự tham gia chuyến xe
+app.delete("/thamgiachuyenxe/:MaCX/:MaNV", (req, res) => {
+    const sql = "DELETE FROM THAMGIACHUYENXE WHERE MaCX = ? AND MaNV = ?";
+    db.query(sql, [req.params.MaCX, req.params.MaNV], (err) => {
         if (err) {
-            return res.status(500).json({ error: "Error deleting bus" });
+            return res.status(500).json({ error: "Error deleting participant" });
         }
-        return res.json({ message: "Bus deleted successfully" });
+        return res.json({ message: "Participant deleted successfully" });
     });
 });
 
-app.put("/thamgiachuyenxe/:id", (req, res) => {
+// Cập nhật nhân sự tham gia chuyến xe
+app.put("/thamgiachuyenxe/:MaCX/:MaNV", (req, res) => {
     const veData = {
-       MaNV: req.data.MaNV,
-       ViTri: req.data.ViTri,
-       NgayPhanCong: req.data.NgayPhanCong  // Cập nhật tình trạng vé
+        MaNV: req.body.MaNV,
+        ViTri: req.body.ViTri,
+        NgayPhanCong: req.body.NgayPhanCong
     };
-    const sql = "UPDATE THAMGIACHUYENXE SET ? WHERE MaCX= ?";
-    db.query(sql, [veData, req.params.id], (err) => {
+    const sql = "UPDATE THAMGIACHUYENXE SET ? WHERE MaCX = ? AND MaNV = ?";
+    db.query(sql, [veData, req.params.MaCX, req.params.MaNV], (err) => {
         if (err) {
             return res.status(500).json({ error: "Error updating ticket" });
         }
@@ -707,4 +721,64 @@ app.post("/api/insert-ticket", async (req, res) => {
 const port = 8081;
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
+});
+
+
+// CRUD cho TAIKHOAN
+// Tạo mới
+app.post("/taikhoan", (req, res) => {
+    const accountData = {
+        MaTK: req.body.MaTK,
+        Email: req.body.Email,
+        Password: bcrypt.hashSync(req.body.Password, 10), // Mã hóa mật khẩu
+        MaKH: req.body.MaKH,  // Mã khách hàng liên kết (nếu cần)
+    };
+
+    const sql = "INSERT INTO TAIKHOAN SET ?";
+    db.query(sql, accountData, (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: "Error creating account" });
+        }
+        return res.json({ message: "Account created successfully", id: result.insertId });
+    });
+});
+
+// Đọc danh sách tài khoản
+app.get("/taikhoan", (req, res) => {
+    const sql = "SELECT * FROM TAIKHOAN";
+    db.query(sql, (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: "Error fetching accounts" });
+        }
+        return res.json(results);
+    });
+});
+
+// Cập nhật tài khoản 
+app.put("/taikhoan/:id", (req, res) => {
+    const { Email, Password, MaKH } = req.body;
+    const accountData = {
+        Email,
+        Password: bcrypt.hashSync(Password, 10), // Mã hóa mật khẩu
+        MaKH,
+    };
+
+    const sql = "UPDATE TAIKHOAN SET ? WHERE MaTK = ?";
+    db.query(sql, [accountData, req.params.id], (err) => {
+        if (err) {
+            return res.status(500).json({ error: "Error updating account" });
+        }
+        return res.json({ message: "Account updated successfully" });
+    });
+});
+
+// Xóa tài khoản
+app.delete("/taikhoan/:id", (req, res) => {
+    const sql = "DELETE FROM TAIKHOAN WHERE MaTK = ?";
+    db.query(sql, [req.params.id], (err) => {
+        if (err) {
+            return res.status(500).json({ error: "Error deleting account" });
+        }
+        return res.json({ message: "Account deleted successfully" });
+    });
 });
