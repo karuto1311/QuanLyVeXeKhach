@@ -331,19 +331,19 @@ app.delete("/benxe/:id", (req, res) => {
 // Tạo xe
 app.post("/xe", (req, res) => {
     const xeData = {
-        BienSoXe: req.data.BienSoXe,
-        LoaiXe: req.data.LoaiXe,
-        SoChoNgoi: req.data.SoCHoNgoi,
-        HangSanXuat: req.data.HangSanXuat,
-        NamSanXuat: req.data.NamSanXuat,
-        MaBX: req.data.MaBX
+        BienSoXe: req.body.BienSoXe,
+        LoaiXe: req.body.LoaiXe,
+        SoChoNgoi: req.body.SoChoNgoi,
+        HangSanXuat: req.body.HangSanXuat,
+        NamSanXuat: req.body.NamSanXuat,
+        MaBX: req.body.MaBX
     };
     const sql = "INSERT INTO XE SET ?";
     db.query(sql, xeData, (err, result) => {
         if (err) {
-            return res.status(500).json({ error: "Error creating trip" });
+            return res.status(500).json({ error: "Error creating bus", details: err.message });
         }
-        return res.json({ message: "Trip created successfully", id: result.insertId });
+        return res.status(201).json({ message: "Bus created successfully", id: result.insertId });
     });
 });
 
@@ -352,25 +352,28 @@ app.get("/xe", (req, res) => {
     const sql = "SELECT * FROM XE";
     db.query(sql, (err, results) => {
         if (err) {
-            return res.status(500).json({ error: "Error fetching buses" });
+            return res.status(500).json({ error: "Error fetching buses", details: err.message });
         }
-        return res.json(results);
+        return res.status(200).json(results);
     });
 });
 
 // Cập nhật xe
 app.put("/xe/:id", (req, res) => {
     const xeData = {
-        LoaiXe: req.data.LoaiXe,
-        SoChoNgoi: req.data.SoCHoNgoi,
-        HangSanXuat: req.data.HangSanXuat,
-        NamSanXuat: req.data.NamSanXuat,
-        MaBX: req.data.MaBX
+        LoaiXe: req.body.LoaiXe,
+        SoChoNgoi: req.body.SoChoNgoi,
+        HangSanXuat: req.body.HangSanXuat,
+        NamSanXuat: req.body.NamSanXuat,
+        MaBX: req.body.MaBX
     };
     const sql = "UPDATE XE SET ? WHERE BienSoXe = ?";
-    db.query(sql, [xeData, req.params.id], (err) => {
+    db.query(sql, [xeData, req.params.id], (err, result) => {
         if (err) {
-            return res.status(500).json({ error: "Error updating bus" });
+            return res.status(500).json({ error: "Error updating bus", details: err.message });
+        }
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: "Bus not found" });
         }
         return res.json({ message: "Bus updated successfully" });
     });
@@ -379,9 +382,12 @@ app.put("/xe/:id", (req, res) => {
 // Xóa xe
 app.delete("/xe/:id", (req, res) => {
     const sql = "DELETE FROM XE WHERE BienSoXe = ?";
-    db.query(sql, [req.params.id], (err) => {
+    db.query(sql, [req.params.id], (err, result) => {
         if (err) {
-            return res.status(500).json({ error: "Error deleting bus" });
+            return res.status(500).json({ error: "Error deleting bus", details: err.message });
+        }
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: "Bus not found" });
         }
         return res.json({ message: "Bus deleted successfully" });
     });
