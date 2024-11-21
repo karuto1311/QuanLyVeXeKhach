@@ -76,6 +76,7 @@ app.post("/signup", async (req, res) => {
                 Email: req.body.Email,
                 Password: hashedPassword,
                 MaKH: MaKH,
+                HoVaTen: req.body.HoVaTen
             };
 
             const accountSql = "INSERT INTO TAIKHOAN SET ?";
