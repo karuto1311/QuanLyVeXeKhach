@@ -66,7 +66,7 @@ const ScheduleContent = () => {
   return (
     <div className="schedule">
       <h1>Lịch Trình Xe Khách</h1>
-      <table className="station-table" style={{ margin: "20px auto" }}>
+      <table className="station-table-fix" style={{ margin: "20px auto" }}>
         <thead>
           <tr>
             {columns.map((column) => (
@@ -86,7 +86,7 @@ const ScheduleContent = () => {
             ))}
         </tbody>
       </table>
-      <div className="pagination">
+      <div className="pagination-fix">
         <button
           className="pagination-button"
           onClick={() => handleChangePage(page - 1)}

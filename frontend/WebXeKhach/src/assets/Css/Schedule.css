@@ -26,15 +26,31 @@
   margin: 0 5px;
 }
 
-.station-table {
+.station-table-fix {
   font-family: Arial, sans-serif;
   max-width: 76%;
   margin: 20px auto;
   padding: 20px;
+  border-collapse: collapse;
 }
 
-.pagination {
+.station-table-fix th,
+.station-table-fix td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.station-table-fix th {
+  background-color: #ff5722;
+  color: white;
+}
+
+.pagination-fix {
   max-width: 76%;
   margin: 20px auto;
-  /* padding: 20px; */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
 }
