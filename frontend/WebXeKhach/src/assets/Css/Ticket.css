@@ -45,7 +45,7 @@ h1 {
     border-bottom: 2px solid #ff5722;
 }
 
-.button-ticket {
+.button-ticket-2 {
     display: block; /* Đảm bảo nút là phần tử block */
     width: 300px; /* Đặt chiều rộng cụ thể cho nút */
     margin: 20px auto; /* Căn giữa nút */
@@ -68,3 +68,25 @@ h1 {
         width: 100%;
     }
 }
+
+.ticket-box {
+    background-color: white;
+    width: 100%;
+    max-width: 400px;
+    padding: 30px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+    transition: box-shadow 0.3s ease;
+    align-content: center;
+}
+
+.ticket-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    background-color: #f5f5f5;
+    padding: 0 20px;
+  }
+
