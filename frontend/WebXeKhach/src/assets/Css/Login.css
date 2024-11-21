@@ -4,6 +4,7 @@
   align-items: center;
   height: 100vh;
   background-color: #f5f5f5;
+  padding: 0 20px;
 }
 
 .login-box {
@@ -29,31 +30,40 @@
   text-transform: uppercase;
 }
 
-/* Các nhóm ô input */
-.form-group {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.form-group-rg {
+  margin-bottom: 20px; /* Tăng khoảng cách giữa các nhóm */
+  width: 100%;
+  text-align: left; /* Căn trái cho label */
 }
 
-.input-field {
-  width: 100%; 
+.form-group-rg a {
+  width: 100%;
+  text-align: left; /* Căn trái cho label */
+}
+
+.label-field {
+  margin-bottom: 5px; /* Khoảng cách giữa label và input */
+  color: #333; /* Màu sắc cho label */
+  font-weight: bold; /* Định dạng cho label */
+}
+
+.input-fieldd {
+  width: 100%;
   padding: 12px;
   border-radius: 4px;
-  border: 1px solid #ddd; 
+  border: 1px solid #ddd;
   font-size: 16px;
   transition: border-color 0.3s ease;
-  margin: 0; 
+  box-sizing: border-box;
 }
 
-.input-field:focus {
-  border-color: #ff6600; 
-  outline: none; 
+.input-fieldd:focus {
+  border-color: #ff6600;
+  outline: none;
 }
 
 .button-ticket {
-  width: 100%; 
-  max-width: 325px;
+  width: 100%;
   padding: 12px;
   background-color: #ff6600;
   color: white;
@@ -63,23 +73,25 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
   font-weight: 600;
-  margin: 20px auto; 
+
+  margin-bottom: 10px;
 }
 
 .button-ticket:hover {
   background-color: #e65c00;
 }
 
-.forgot-password {
+.forgot-passwordj {
+  justify-content: center;
   display: block;
   color: #ff6600;
   font-size: 14px;
   text-decoration: none;
   transition: color 0.3s ease;
-  margin-top: 0px; 
+  margin-top: 15px;
 }
 
-.forgot-password:hover {
+.forgot-passwordj:hover {
   color: #e65c00;
   text-decoration: underline;
 }
@@ -87,4 +99,6 @@
 body {
   font-family: "Arial", sans-serif;
   font-size: 16px;
+  margin: 0;
+  padding: 0;
 }

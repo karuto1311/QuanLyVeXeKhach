@@ -126,27 +126,27 @@
 
 import React, { useState } from "react";
 import "../assets/Css/Register.css";
-import { Link, useNavigate } from "react-router-dom";  // useNavigate instead of Navigate
+import { Link, useNavigate } from "react-router-dom"; // useNavigate instead of Navigate
 import axios from "axios";
 
 function Register() {
-  const navigate = useNavigate();  // Initialize navigate hook
+  const navigate = useNavigate(); // Initialize navigate hook
   const [userData, setUserData] = useState({
-    HoVaTen: '',
-    NgaySinh: '',
-    DiaChi: '',
-    Email: '',
-    SDT: '',
-    Password: ''
+    HoVaTen: "",
+    NgaySinh: "",
+    DiaChi: "",
+    Email: "",
+    SDT: "",
+    Password: "",
   });
-  const [rePassword, setRePassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState(''); // State to handle errors
+  const [rePassword, setRePassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); // State to handle errors
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
-    setUserData(prevState => ({
+    setUserData((prevState) => ({
       ...prevState,
-      [id]: value
+      [id]: value,
     }));
   };
 
@@ -154,29 +154,34 @@ function Register() {
     e.preventDefault();
 
     // Validate form data
-    if (!userData.HoVaTen || !userData.Email || !userData.SDT || !userData.Password || !rePassword) {
-      setErrorMessage('Vui lòng điền đầy đủ thông tin.');
+    if (
+      !userData.HoVaTen ||
+      !userData.Email ||
+      !userData.SDT ||
+      !userData.Password ||
+      !rePassword
+    ) {
+      setErrorMessage("Vui lòng điền đầy đủ thông tin.");
       return;
     }
 
     if (rePassword !== userData.Password) {
-      setErrorMessage('Nhập lại mật khẩu không khớp');
+      setErrorMessage("Nhập lại mật khẩu không khớp");
       return;
     }
 
     try {
-      const res = await axios.post('http://localhost:8081/signup', userData);
+      const res = await axios.post("http://localhost:8081/signup", userData);
       console.log(res); // Log the response to see if the server returns anything
       if (res.status === 200) {
         alert("Đăng ký thành công!");
-        navigate('/schedule');
+        navigate("/schedule");
       }
     } catch (err) {
       console.log(err.response); // Log the detailed error response
-      setErrorMessage('Đã xảy ra lỗi. Vui lòng thử lại.');
+      setErrorMessage("Đã xảy ra lỗi. Vui lòng thử lại.");
     }
   };
-
 
   return (
     <div className="rg-container">
@@ -185,9 +190,11 @@ function Register() {
         <div className="form-ticket-register">
           <form>
             <div className="form-group-rg">
-              <label className="input-text" htmlFor="HoVaTen">Họ và tên:</label>
+              <label className="input-text" htmlFor="HoVaTen">
+                Họ và tên:
+              </label>
               <input
-                type="text"
+                type="textxt"
                 id="HoVaTen"
                 className="input-field"
                 placeholder="Nhập họ và tên"
@@ -196,7 +203,9 @@ function Register() {
               />
             </div>
             <div className="form-group-rg">
-              <label className="input-text" htmlFor="NgaySinh">Ngày sinh:</label>
+              <label className="input-text" htmlFor="NgaySinh">
+                Ngày sinh:
+              </label>
               <input
                 type="date"
                 id="NgaySinh"
@@ -206,9 +215,11 @@ function Register() {
               />
             </div>
             <div className="form-group-rg">
-              <label className="input-text" htmlFor="Email">Email:</label>
+              <label className="input-text" htmlFor="Email">
+                Email:
+              </label>
               <input
-                type="email"
+                type="emaill"
                 id="Email"
                 className="input-field"
                 placeholder="Nhập email"
@@ -217,9 +228,11 @@ function Register() {
               />
             </div>
             <div className="form-group-rg">
-              <label className="input-text" htmlFor="SDT">Số điện thoại:</label>
+              <label className="input-text" htmlFor="SDT">
+                Số điện thoại:
+              </label>
               <input
-                type="tel"
+                type="tell"
                 id="SDT"
                 className="input-field"
                 placeholder="Nhập số điện thoại"
@@ -228,7 +241,9 @@ function Register() {
               />
             </div>
             <div className="form-group-rg">
-              <label className="input-text" htmlFor="Password">Mật khẩu:</label>
+              <label className="input-text" htmlFor="Password">
+                Mật khẩu:
+              </label>
               <input
                 type="password"
                 id="Password"
@@ -239,7 +254,9 @@ function Register() {
               />
             </div>
             <div className="form-group-rg">
-              <label className="input-text" htmlFor="rePassword">Nhập lại mật khẩu:</label>
+              <label className="input-text" htmlFor="rePassword">
+                Nhập lại mật khẩu:
+              </label>
               <input
                 type="password"
                 id="rePassword"
@@ -249,13 +266,20 @@ function Register() {
                 value={rePassword}
               />
             </div>
-            {errorMessage && <div className="error-message">{errorMessage}</div>} {/* Display error message */}
-            <div className="form-group">
-              <button className="button-ticket" onClick={handleSubmit}>Đăng ký</button>
+            {errorMessage && (
+              <div className="error-message">{errorMessage}</div>
+            )}{" "}
+            {/* Display error message */}
+            <div className="form-group-rg">
+              <button className="button-ticket" onClick={handleSubmit}>
+                Đăng ký
+              </button>
             </div>
-            <Link to="/login" className="forgot-password">
-              Bạn đã có tài khoản? Đăng nhập
-            </Link>
+            <div className="form-link">
+              <Link to="/login" className="forgot-password">
+                Bạn đã có tài khoản? Đăng nhập
+              </Link>
+            </div>
           </form>
         </div>
       </div>
