@@ -3,8 +3,24 @@ const mysql = require("mysql2");
 const cors = require("cors");
 const bcrypt = require("bcrypt"); // For password hashing
 const { randomInt } = require("crypto");
+const express = require("express");
+const path = require("path");
 
 const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Serve static frontend
+app.use(express.static(path.join(__dirname, "public")));
+
+// Serve React frontend
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
 app.use(cors());
 app.use(express.json());
 
