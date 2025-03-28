@@ -219,7 +219,7 @@ const Trip = ({
           trip,
         }}
       >
-        <button className="select-trip-button">Chọn chuyến</button>
+        <button className="select-trip-button">Chọnn chuyến</button>
       </Link>
     </div>
   </div>
