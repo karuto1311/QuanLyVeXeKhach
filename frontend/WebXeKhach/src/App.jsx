@@ -30,6 +30,12 @@ import CRUDBusTrip from "./backend/CRUDBusTrip";
 import CRUDTripParticipants from "./backend/CRUDTripParticipants";
 import CRUDTicket from "./backend/CRUDTicket";
 
+import PaymentBtn from "./PaymentBtn";
+import Result from "./Result";
+
+import ThongTinTaiKhoan from "./ThongTinTaiKhoan";
+import LichSuMuaVe from "./LichSuMuaVe";
+
 function App() {
   const [count, setCount] = useState(0);
 
@@ -64,7 +70,12 @@ function App() {
             element={<CRUDTripParticipants />}
           />
           <Route path="/crudticket" element={<CRUDTicket />} />
-          */
+          <Route path="/create-payment" element={<PaymentBtn />} />
+          <Route path="/result" element={<Result />} />
+
+          <Route path="/thong-tin-tai-khoan" element={<ThongTinTaiKhoan />} />
+          <Route path="/lich-su-mua-ve" element={<LichSuMuaVe />} />
+
           {/*<Route path="/" element={<Home />} />
           <Route path="/schedule" element={<Schedule />} />
           <Route path="/about" element={<About />} />

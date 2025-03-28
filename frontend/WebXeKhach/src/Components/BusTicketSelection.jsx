@@ -1,15 +1,13 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "../assets/Css/BusTicketSelection.css";
 import { Link } from "react-router-dom";
 import bus_image from "../assets/bus_image.png";
 import icon_trash from "../assets/icon_trash.png";
-import moment from 'moment'
+import moment from "moment";
 
 const BusTicketSelection = () => {
   const [tripType, setTripType] = useState("one-way");
   const [trips, setTrips] = useState([]);
-  
-
 
   useEffect(() => {
     const fetchTrips = async () => {
@@ -19,7 +17,7 @@ const BusTicketSelection = () => {
           throw new Error("Failed to fetch trips");
         }
         const data = await response.json();
-        setTrips(data); // Update state with the fetched trip data
+        setTrips(data); // Lấy dữ liệu chuyến xe từ database, bao gồm vehicle_number
       } catch (error) {
         console.error("Error fetching trips:", error);
       }
@@ -38,7 +36,6 @@ const BusTicketSelection = () => {
     </div>
   );
 };
-
 
 const HeaderImage = () => (
   <div className="header-image">
@@ -69,8 +66,8 @@ const SearchBox = ({ tripType, setTripType }) => (
       </label>
     </div>
     <div className="input-fields">
-      <input type="texttT" placeholder="Điểm đi" />
-      <input type="texttT" placeholder="Điểm đến" />
+      <input type="text" placeholder="Điểm đi" />
+      <input type="text" placeholder="Điểm đến" />
       <input type="date" placeholder="Ngày đi" />
       <input type="number" placeholder="Số vé" />
     </div>
@@ -80,7 +77,6 @@ const SearchBox = ({ tripType, setTripType }) => (
 
 const FilterBox = () => {
   const handleClearFilters = () => {
-    // Bỏ chọn tất cả các checkbox trong phần bộ lọc
     document
       .querySelectorAll(".filter-box input[type='checkbox']")
       .forEach((checkbox) => {
@@ -97,61 +93,50 @@ const FilterBox = () => {
         </button>
       </div>
       <div className="filter-options">
-        <div className="filter-group">
-          <FilterGroup title="Giờ đi">
-            <label>
-              <input type="checkbox" /> Sáng sớm 00:00 - 06:00
-            </label>
-            <label>
-              <input type="checkbox" /> Buổi sáng 06:00 - 12:00
-            </label>
-            <label>
-              <input type="checkbox" /> Buổi chiều 12:00 - 18:00
-            </label>
-            <label>
-              <input type="checkbox" /> Buổi tối 18:00 - 24:00
-            </label>
-          </FilterGroup>
-        </div>
-
-        <div className="filter-group">
-          <FilterGroup title="Loại xe">
-            <label>
-              <input type="checkbox" /> Ghế
-            </label>
-            <label>
-              <input type="checkbox" /> Giường
-            </label>
-            <label>
-              <input type="checkbox" /> Limousine
-            </label>
-          </FilterGroup>
-        </div>
-
-        <div className="filter-group">
-          <FilterGroup title="Hàng ghế">
-            <label>
-              <input type="checkbox" /> Hàng đầu
-            </label>
-            <label>
-              <input type="checkbox" /> Hàng giữa
-            </label>
-            <label>
-              <input type="checkbox" /> Hàng cuối
-            </label>
-          </FilterGroup>
-        </div>
-
-        <div className="filter-group">
-          <FilterGroup title="Tầng">
-            <label>
-              <input type="checkbox" /> Tầng trên
-            </label>
-            <label>
-              <input type="checkbox" /> Tầng dưới
-            </label>
-          </FilterGroup>
-        </div>
+        <FilterGroup title="Giờ đi">
+          <label>
+            <input type="checkbox" /> Sáng sớm 00:00 - 06:00
+          </label>
+          <label>
+            <input type="checkbox" /> Buổi sáng 06:00 - 12:00
+          </label>
+          <label>
+            <input type="checkbox" /> Buổi chiều 12:00 - 18:00
+          </label>
+          <label>
+            <input type="checkbox" /> Buổi tối 18:00 - 24:00
+          </label>
+        </FilterGroup>
+        <FilterGroup title="Loại xe">
+          <label>
+            <input type="checkbox" /> Ghế
+          </label>
+          <label>
+            <input type="checkbox" /> Giường
+          </label>
+          <label>
+            <input type="checkbox" /> Limousine
+          </label>
+        </FilterGroup>
+        <FilterGroup title="Hàng ghế">
+          <label>
+            <input type="checkbox" /> Hàng đầu
+          </label>
+          <label>
+            <input type="checkbox" /> Hàng giữa
+          </label>
+          <label>
+            <input type="checkbox" /> Hàng cuối
+          </label>
+        </FilterGroup>
+        <FilterGroup title="Tầng">
+          <label>
+            <input type="checkbox" /> Tầng trên
+          </label>
+          <label>
+            <input type="checkbox" /> Tầng dưới
+          </label>
+        </FilterGroup>
       </div>
     </div>
   );
@@ -175,19 +160,30 @@ const TripResults = ({ trips }) => (
     {trips.map((trip, index) => (
       <Trip
         key={index}
-        start={moment(trip.start).local().format("YYYY-MM-DD HH:mm:ss")} // Convert to local time
-        end={moment(trip.end).local().format("YYYY-MM-DD HH:mm:ss")} // Convert to local time
+        start={moment(trip.start).local().format("YYYY-MM-DD HH:mm:ss")}
+        end={moment(trip.end).local().format("YYYY-MM-DD HH:mm:ss")}
         startPoint={trip.start_point}
         endPoint={trip.end_point}
         seatsAvailable={36}
         price={trip.price}
-        trip={trip} // Pass entire trip data as prop
+        vehicle_number={trip.vehicle_number} // Trường mới, lấy từ backend
+        trip={trip}
       />
     ))}
   </div>
 );
 
-const Trip = ({ start, end, startPoint, endPoint, seatsAvailable, price, trip }) => (
+// Component Trip, sử dụng destructuring với "vehicle_number"
+const Trip = ({
+  start,
+  end,
+  startPoint,
+  endPoint,
+  seatsAvailable,
+  price,
+  trip,
+  vehicle_number,
+}) => (
   <div className="trip">
     <div className="trip-details">
       <div className="trip-row">
@@ -196,12 +192,15 @@ const Trip = ({ start, end, startPoint, endPoint, seatsAvailable, price, trip })
         <span>{startPoint}</span>
         <span>Giường 2 Tầng</span>
       </div>
-
       <div className="trip-row">
         <span className="trip-label">Kết thúc</span>
         <span>{end}</span>
         <span>{endPoint}</span>
         <span>{seatsAvailable} chỗ trống</span>
+      </div>
+      <div className="trip-row">
+        <span className="trip-label">Biển số xe:</span>
+        <span>{vehicle_number || "Không có thông tin"}</span>
       </div>
       <hr className="trip-divider" />
     </div>
@@ -209,14 +208,22 @@ const Trip = ({ start, end, startPoint, endPoint, seatsAvailable, price, trip })
       <div className="trip-price">Giá vé: {price}₫</div>
       <Link
         to="/busticketform"
-        state={{ start, end, startPoint, endPoint, seatsAvailable, price, trip }}
+        state={{
+          start,
+          end,
+          startPoint,
+          endPoint,
+          seatsAvailable,
+          price,
+          vehicle_number,
+          trip,
+        }}
       >
-      <button className="select-trip-button">Chọn chuyến</button>
+        <button className="select-trip-button">Chọn chuyến</button>
       </Link>
     </div>
   </div>
 );
 
-
-export {Trip};
+export { Trip };
 export default BusTicketSelection;

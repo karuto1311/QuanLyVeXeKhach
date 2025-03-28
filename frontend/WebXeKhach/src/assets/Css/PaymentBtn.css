@@ -1,0 +1,41 @@
+/* Payment.css */
+#paymentPage {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+#paymentPage h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.trip-info,
+.customer-info {
+  background-color: #f7f7f7;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
+
+.trip-info p,
+.customer-info p {
+  margin: 5px 0;
+}
+
+#paymentPage button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#paymentPage button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}

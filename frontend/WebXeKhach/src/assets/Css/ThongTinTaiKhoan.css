@@ -1,0 +1,21 @@
+#accountPage {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+#accountPage h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.account-details {
+  background-color: #f7f7f7;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.account-details p {
+  margin: 10px 0;
+}
