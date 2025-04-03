@@ -1,41 +1,112 @@
-/* Payment.css */
-#paymentPage {
+/* PaymentBtn Page Styles */
+.payment-page {
   max-width: 600px;
-  margin: 0 auto;
+  margin: 40px auto;
   padding: 20px;
-  font-family: Arial, sans-serif;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  font-family: "Arial", sans-serif;
+  text-align: left;
 }
 
-#paymentPage h2 {
-  text-align: center;
+.payment-page h2 {
+  color: #ff5722;
+  font-size: 24px;
   margin-bottom: 20px;
 }
 
-.trip-info,
-.customer-info {
-  background-color: #f7f7f7;
+.payment-page .trip-info,
+.payment-page .customer-info {
+  background: #f0f0f0; /* Màu nền xám */
   padding: 15px;
+  border-radius: 8px;
   margin-bottom: 20px;
-  border-radius: 5px;
+  text-align: left;
+  border: 2px solid #ff5722; /* Viền cam */
 }
 
-.trip-info p,
+.trip-info p {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.trip-info p strong {
+  min-width: 150px; /* Điều chỉnh độ rộng phù hợp với nội dung */
+  text-align: left;
+  margin-right: 10px;
+}
+
 .customer-info p {
-  margin: 5px 0;
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
 }
 
-#paymentPage button {
-  display: block;
+.customer-info p strong {
+  min-width: 150px; /* Điều chỉnh giá trị này theo nhu cầu */
+  text-align: left;
+  margin-right: 10px;
+}
+
+.payment-page p {
+  margin: 10px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.payment-page strong {
+  color: #ff5722;
+}
+
+/* Nút thanh toán MoMo */
+.payment-page .payment-btn,
+.payment-page button {
+  display: inline-block;
   width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
+  padding: 12px 0;
+  font-size: 18px;
+  font-weight: bold;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
+  text-align: center;
+  text-decoration: none;
   cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
 }
 
-#paymentPage button:disabled {
-  background-color: #ccc;
+/* Khi chưa có payUrl -> nút button MoMo */
+.payment-page button {
+  background: #d82d8b; /* Màu thương hiệu MoMo */
+  color: white;
+}
+
+/* Khi có payUrl -> hiển thị dưới dạng link MoMo */
+.payment-page .payment-btn {
+  background: #d82d8b;
+  color: white;
+  display: block;
+  text-decoration: none;
+  line-height: 48px;
+}
+
+/* Hover effect */
+.payment-page .payment-btn:hover,
+.payment-page button:hover {
+  filter: brightness(90%);
+  transform: translateY(-2px);
+}
+
+/* Nút bị vô hiệu hóa */
+.payment-page button:disabled {
+  background: #ccc;
   cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .payment-page {
+    width: 90%;
+    padding: 15px;
+  }
 }

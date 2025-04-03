@@ -1,131 +1,155 @@
 .bus-ticket-selection {
   font-family: Arial, sans-serif;
   color: #333;
-  max-width: 900px;
+  max-width: 1100px;
   margin: auto;
+  padding: 20px;
 }
 
+/* Header Image */
 .header-image img {
   width: 100%;
-  border-radius: 5px;
+  border-radius: 8px;
 }
 
+/* Search Box */
 .search-box {
   background: #fff;
   border: 2px solid #ff6600;
   padding: 20px;
   border-radius: 8px;
   margin-top: 20px;
-  position: relative;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .trip-type {
   display: flex;
   gap: 20px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .input-fields {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .input-fields input {
-  width: 100%;
-  padding: 8px;
+  flex: 1;
+  padding: 10px;
   border: 1px solid #ff5722;
   border-radius: 4px;
+  font-size: 14px;
 }
 
 .search-button {
   background: #ff6600;
   color: #fff;
-  padding: 10px 20px;
+  padding: 12px 20px;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
-  margin-top: 10px;
+  font-size: 16px;
+  transition: background 0.3s ease;
 }
 
-.filter-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
+.search-button:hover {
+  background: #e65c00;
 }
 
-.clear-filters-button {
-  display: flex;
-  align-items: center; /* Căn giữa nội dung theo chiều dọc */
-  justify-content: center; /* Căn giữa nội dung theo chiều ngang nếu cần */
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  padding: 6px 12px; /* Tăng padding để làm nút lớn hơn */
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  color: #333;
-  gap: 6px; /* Khoảng cách giữa icon và text */
-  transition: background-color 0.2s, border-color 0.2s;
+/* Filter Box */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
-
-.clear-filters-button:hover {
-  background-color: #e0e0e0;
-  border-color: #aaa;
-}
-
-.icontrash {
-  width: 18px; /* Điều chỉnh kích thước icon nhỏ hơn */
-  height: 18px;
-  color: #666;
-}
-
 .filter-and-results {
   display: flex;
   gap: 20px;
-  margin-bottom: 20px;
   margin-top: 20px;
 }
 
 .filter-box {
-  text-align: left;
   flex: 1;
-  padding: 10px;
   background: #f9f9f9;
-  border-radius: 10px;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.05);
+  min-width: 280px; /* Đảm bảo không bị quá hẹp khi màn hình nhỏ */
 }
 
-.filter-box h4 {
-  margin-bottom: 10px;
-  color: #333;
-}
-
-.filter-options {
-  padding: 16px;
-}
-
-.filter-options .filter-group:not(:last-child) {
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 12px;
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 12px;
 }
 
+.clear-filters-button {
+  display: flex;
+  align-items: center;
+  background-color: #e0e0e0;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  gap: 6px;
+  transition: background 0.3s ease;
+}
+
+.clear-filters-button:hover {
+  background-color: #ccc;
+}
+
+.icontrash {
+  width: 18px;
+  height: 18px;
+}
+
+/* Filter Options */
+.filter-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
 .filter-group {
-  margin-bottom: 15px;
+  padding: 12px;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  text-align: left;
+  margin-bottom: 15px; /* Thêm khoảng cách giữa các nhóm filter */
 }
 
 .filter-group label {
-  /*font-weight: bold;*/
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
+  font-size: 14px;
 }
 
+.filter-group input {
+  margin: 5px 0;
+}
+
+.filter-group input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+/* Results Section */
 .results {
   flex: 2;
 }
 
 .results h4 {
-  text-align: left;
+  font-size: 24px; /* Tăng kích thước chữ */
+  color: #ff6600; /* Màu chữ cam */
+  font-weight: bold; /* Làm chữ đậm */
+  margin-bottom: 20px; /* Khoảng cách dưới chữ */
 }
 
 .sort-options {
@@ -135,50 +159,72 @@
 }
 
 .sort-options button {
-  padding: 6px 12px;
+  padding: 8px 12px;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
+  transition: background 0.3s ease;
 }
 
+.sort-options button:hover {
+  background: #f0f0f0;
+}
+
+/* Trip Listing */
+/* Trip Row: Canh đều các phần tử */
+/* Trip */
 .trip {
-  display: flex;
-  flex-direction: column;
-  padding: 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  margin-bottom: 10px;
+  padding: 20px; /* Tăng padding trong trip để không bị chật */
+  margin-bottom: 20px; /* Thêm khoảng cách giữa các chuyến */
+  border-radius: 8px; /* Góc bo tròn */
   background-color: #fff;
+  border: 2px solid #ff6600; /* Thêm khung viền với màu cam */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Thêm bóng đổ cho trip */
+  transition: transform 0.2s ease-in-out;
 }
 
-.trip-details {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  flex: 1;
+.trip:hover {
+  transform: scale(1.02);
 }
 
 .trip-row {
   display: flex;
   justify-content: space-between;
-  padding: 8px 0; /* Added space between the rows */
+  align-items: center;
+  padding: 6px 0;
+  width: 100%;
+}
+
+.trip-row span {
+  flex: 1; /* Các phần tử span sẽ chiếm đều không gian trong trip-row */
+  text-align: left; /* Căn trái cho các phần tử */
 }
 
 .trip-label {
   font-weight: bold;
   color: #ff6600;
+  text-align: left;
+  flex: 0 0 20%; /* Đảm bảo label có chiều rộng cố định */
+}
+
+.trip-value,
+.trip-location,
+.trip-extra {
+  text-align: left; /* Căn trái cho tất cả các phần tử */
+  flex: 1; /* Đảm bảo các phần tử còn lại chia đều không gian */
 }
 
 .trip-divider {
   border: none;
   border-top: 1px solid #ddd;
-  margin: 10px 0; /* Adjusted the space above and below the divider */
+  margin: 8px 0;
 }
 
+/* Cập nhật trip-bottom để đảm bảo căn đều */
 .trip-bottom {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  justify-content: space-between; /* Căn đều các phần tử */
+  align-items: center;
   margin-top: 10px;
 }
 
@@ -192,9 +238,122 @@
 .select-trip-button {
   background: #ff6600;
   color: #fff;
-  padding: 8px 16px;
+  padding: 10px 16px;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s ease;
+}
+
+.select-trip-button:hover {
+  background: #e65c00;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .filter-and-results {
+    flex-direction: column;
+  }
+
+  .input-fields {
+    flex-direction: column;
+  }
+
+  .search-box {
+    text-align: center;
+  }
+
+  .search-button {
+    width: 100%;
+  }
+
+  .trip {
+    text-align: center;
+  }
+
+  .trip-details {
+    align-items: center;
+  }
+
+  .trip-bottom {
+    align-items: center;
+  }
+}
+
+/* Style cho phần điểm trung chuyển */
+.trip-transits {
+  background-color: #f7f8fa;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.trip-transits h5 {
+  font-size: 18px;
+  font-weight: bold;
+  color: #2d3e50;
+  margin-bottom: 10px;
+  text-align: left; /* Căn chỉnh tiêu đề "Điểm trung chuyển" */
+  margin-top: 0; /* Bỏ margin-top nếu có, để tránh lồi lõm */
+}
+
+.trip-transit {
+  background-color: #ffffff;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  overflow: hidden;
+}
+
+.trip-transit:last-child {
+  margin-bottom: 0;
+}
+
+.transit-location {
+  font-size: 16px;
+  font-weight: bold;
+  color: #1e88e5;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.transit-arrival,
+.transit-departure {
+  font-size: 14px;
+  color: #607d8b;
+}
+
+.transit-arrival::before {
+  content: "🕒 "; /* Thêm icon giờ */
+}
+
+.transit-departure::before {
+  content: "🚍 "; /* Thêm icon xe */
+}
+
+.trip-transit span {
+  display: block;
+  margin-bottom: 5px;
+}
+
+@media (max-width: 768px) {
+  .trip-transits {
+    padding: 10px;
+  }
+
+  .trip-transit {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .trip-transit span {
+    margin-bottom: 8px;
+  }
 }

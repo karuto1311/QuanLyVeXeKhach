@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../assets/Css/BusTicketForm.css";
 import { useNavigate, Link, useLocation } from "react-router-dom";
-import { Trip } from "./BusTicketSelection";
 
 const user = JSON.parse(localStorage.getItem("user"));
 console.log("User data from localStorage:", user);
@@ -35,15 +34,10 @@ const seatLabelToNumber = (label) => {
   return null;
 };
 
-const BusTicketForm = ({ dbConnection }) => {
+const BusTicketForm = () => {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [soldSeats, setSoldSeats] = useState(new Set());
   const [acceptedTerms, setAcceptedTerms] = useState(false);
-  const [formErrors, setFormErrors] = useState({
-    name: "",
-    phone: "",
-    email: "",
-  });
   const location = useLocation();
   const navigate = useNavigate();
   const {
@@ -51,14 +45,13 @@ const BusTicketForm = ({ dbConnection }) => {
     end,
     startPoint,
     endPoint,
-    vehicle_number, // nhận thông tin từ state
+    vehicle_number,
     seatsAvailable,
     price,
     trip,
   } = location.state || {};
-  console.log("Trip object:", trip);
 
-  // Lấy giá vé từ database, nếu không có fallback 140000
+  console.log("Trip object:", trip);
   const seatPrice = price || 140000;
 
   if (!location.state) {
@@ -73,8 +66,14 @@ const BusTicketForm = ({ dbConnection }) => {
 
   const handleSeatSelection = (seatNumber) => {
     if (soldSeats.has(seatNumber)) return;
-    setSelectedSeats((prevSelectedSeats) =>
-      prevSelectedSeats.includes(seatNumber) ? [] : [seatNumber]
+    if (selectedSeats.length >= 10 && !selectedSeats.includes(seatNumber)) {
+      alert("Bạn chỉ có thể chọn tối đa 10 ghế.");
+      return;
+    }
+    setSelectedSeats((prev) =>
+      prev.includes(seatNumber)
+        ? prev.filter((s) => s !== seatNumber)
+        : [...prev, seatNumber]
     );
   };
 
@@ -83,10 +82,7 @@ const BusTicketForm = ({ dbConnection }) => {
       try {
         const response = await fetch("http://localhost:8081/api/sold-seats");
         if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(
-            `HTTP error! status: ${response.status}, Details: ${errorData.error}`
-          );
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
         setSoldSeats(new Set(data));
@@ -105,46 +101,6 @@ const BusTicketForm = ({ dbConnection }) => {
 
   const totalAmount = selectedSeats.length * seatPrice;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!acceptedTerms) {
-      alert("Bạn cần chấp nhận điều khoản đặt vé.");
-      return;
-    }
-    if (selectedSeats.length === 0) {
-      alert("Vui lòng chọn ít nhất một ghế.");
-      return;
-    }
-    const ticketData = {
-      maCX: trip.MaCX,
-      maKH: maKH,
-      viTriGheNgoi: selectedSeats,
-      giaVe: totalAmount,
-      trangThai: "Sold",
-      hinhThucThanhToan: "Momo",
-      loaiVe: "Tour Du Lich",
-    };
-
-    try {
-      const response = await fetch("http://localhost:8081/api/insert-ticket", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(ticketData),
-      });
-      const data = await response.json();
-      if (data.success) {
-        alert("Ticket inserted successfully!");
-        navigate("/");
-      } else {
-        console.error("Error:", data);
-      }
-    } catch (error) {
-      console.error("Request failed", error);
-    }
-  };
-
   return (
     <div className="bus-ticket-form">
       <h2>Tuyến xe: TP.HCM - NHA TRANG</h2>
@@ -152,34 +108,22 @@ const BusTicketForm = ({ dbConnection }) => {
       <div className="seat-section">
         <h3>Chọn ghế</h3>
         <div className="seat-container">
-          <div className="seat-floor">
-            <h4>Tầng dưới</h4>
-            <div className="seats">
-              {SEATS.slice(0, 18).map((seatNumber) => (
-                <button
-                  key={seatNumber}
-                  className={getSeatClass(seatNumber)}
-                  onClick={() => handleSeatSelection(seatNumber)}
-                >
-                  {seatNumberToLabel(seatNumber)}
-                </button>
-              ))}
+          {[0, 18].map((offset) => (
+            <div className="seat-floor" key={offset}>
+              <h4>{offset === 0 ? "Tầng dưới" : "Tầng trên"}</h4>
+              <div className="seats">
+                {SEATS.slice(offset, offset + 18).map((seatNumber) => (
+                  <button
+                    key={seatNumber}
+                    className={getSeatClass(seatNumber)}
+                    onClick={() => handleSeatSelection(seatNumber)}
+                  >
+                    {seatNumberToLabel(seatNumber)}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
-          <div className="seat-floor">
-            <h4>Tầng trên</h4>
-            <div className="seats">
-              {SEATS.slice(18).map((seatNumber) => (
-                <button
-                  key={seatNumber}
-                  className={getSeatClass(seatNumber)}
-                  onClick={() => handleSeatSelection(seatNumber)}
-                >
-                  {seatNumberToLabel(seatNumber)}
-                </button>
-              ))}
-            </div>
-          </div>
+          ))}
           <div className="seat-legend">
             <span className="legend available">Còn trống</span>
             <span className="legend selected">Đang chọn</span>
@@ -193,80 +137,68 @@ const BusTicketForm = ({ dbConnection }) => {
           <strong>Tuyến xe:</strong> {startPoint} - {endPoint}
         </p>
         <p>
-          <strong>Thời gian xuất bến:</strong> {start}
+          <strong>Thời gian xuất bến:</strong>{" "}
+          {new Date(start).toLocaleString("vi-VN")}
         </p>
         <p>
-          <strong>Thời gian đến:</strong> {end}
+          <strong>Thời gian đến:</strong>{" "}
+          {new Date(end).toLocaleString("vi-VN")}
         </p>
         <p>
           <strong>Biển số xe:</strong> {vehicle_number || "Không có thông tin"}
         </p>
         <p>
           <strong>Số ghế:</strong>{" "}
-          {selectedSeats.length > 0
-            ? selectedSeats
-                .map((seatNumber) => seatNumberToLabel(seatNumber))
-                .join(", ")
-            : "Chưa chọn"}
+          {selectedSeats.map(seatNumberToLabel).join(", ") || "Chưa chọn"}
         </p>
         <p>
           <strong>Tổng tiền:</strong> {totalAmount.toLocaleString("vi-VN")} VND
         </p>
       </div>
-      <form onSubmit={handleSubmit}>
-        <div className="form-containerBusTicketForm">
-          <div className="customer-info">
-            <div className="terms-info">
-              <h3>Điều khoản và lưu ý</h3>
-              <p>
-                (*) Quý khách vui lòng có mặt tại bến xuất phát của xe trước ít
-                nhất 30 phút giờ xe khởi hành, mang theo thông báo đã thanh toán
-                vé thành công có chứa mã vé được gửi từ hệ thống Xe Khách Nam
-                Hải LINE. Vui lòng liên hệ Trung tâm tổng đài 02843512123 để
-                được hỗ trợ.
-              </p>
-              <p>
-                (*) Nếu quý khách có nhu cầu trung chuyển, vui lòng liên hệ Tổng
-                đài trung chuyển 02843512123 trước khi đặt vé. Chúng tôi không
-                đón/trung chuyển tại những điểm xe trung chuyển không thể tới
-                được.
-              </p>
-            </div>
-            <label>
-              <input
-                type="checkbox"
-                checked={acceptedTerms}
-                onChange={() => setAcceptedTerms(!acceptedTerms)}
-              />
-              Chấp nhận điều khoản đặt vé
-            </label>
+      <div className="form-containerBusTicketForm">
+        <div className="customer-info">
+          <div className="terms-info">
+            <h3>Điều khoản và lưu ý</h3>
+            <p>
+              (*) Quý khách vui lòng có mặt tại bến xuất phát của xe trước ít
+              nhất 30 phút giờ xe khởi hành, mang theo thông báo đã thanh toán
+              vé thành công có chứa mã vé được gửi từ hệ thống Xe Khách Nam Hải
+              LINE. Vui lòng liên hệ Trung tâm tổng đài 02843512123 để được hỗ
+              trợ.
+            </p>
+            <p>
+              (*) Nếu quý khách có nhu cầu trung chuyển, vui lòng liên hệ Tổng
+              đài trung chuyển 02843512123 trước khi đặt vé. Chúng tôi không
+              đón/trung chuyển tại những điểm xe trung chuyển không thể tới
+              được.
+            </p>
           </div>
+          <label>
+            <input
+              type="checkbox"
+              checked={acceptedTerms}
+              onChange={() => setAcceptedTerms(!acceptedTerms)}
+            />
+            Chấp nhận điều khoản đặt vé
+          </label>
         </div>
-        <Link
-          to="/create-payment"
-          state={{
-            start,
-            end,
-            startPoint,
-            endPoint,
-            vehicle_number,
-            seatsAvailable,
-            trip,
-            customerName: user?.HoVaTen,
-            customerEmail: user?.Email,
-            customerPhone: user?.SDT,
-            selectedSeats:
-              selectedSeats.length > 0
-                ? selectedSeats.map((seat) => seatNumberToLabel(seat))
-                : [],
-            seatPrice: seatPrice,
-          }}
-        >
-          <button type="submit" className="submit-button">
-            Thanh Toán
-          </button>
-        </Link>
-      </form>
+      </div>
+      <Link
+        to="/create-payment"
+        state={{
+          start,
+          end,
+          startPoint,
+          endPoint,
+          vehicle_number,
+          seatsAvailable,
+          trip,
+          selectedSeats: selectedSeats.map(seatNumberToLabel),
+          seatPrice,
+        }}
+      >
+        <button className="submit-button">Thanh Toán</button>
+      </Link>
     </div>
   );
 };

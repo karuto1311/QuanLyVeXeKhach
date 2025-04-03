@@ -1,22 +1,84 @@
-/* Result.css */
-#resultPage {
+/* Result Page CSS */
+.result-page {
   max-width: 600px;
-  margin: 0 auto;
+  margin: 40px auto;
   padding: 20px;
-  font-family: Arial, sans-serif;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  font-family: "Arial", sans-serif;
+  text-align: left;
 }
 
-#resultPage h2 {
-  text-align: center;
+.result-page h2 {
+  color: #ff5722; /* Đổi màu chữ thành cam */
+  font-size: 24px;
   margin-bottom: 20px;
 }
 
-.ticket-info {
-  background-color: #f7f7f7;
+.result-page .ticket-info,
+.result-page .customer-info {
+  background: #f0f0f0; /* Đổi màu nền thành xám */
   padding: 15px;
-  border-radius: 5px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: left;
+  border: 2px solid #ff5722; /* Viền cam */
 }
 
-.ticket-info p {
-  margin: 8px 0;
+.result-page .ticket-info p,
+.result-page .customer-info p {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.result-page .ticket-info p strong,
+.result-page .customer-info p strong {
+  min-width: 150px; /* Điều chỉnh độ rộng theo ý bạn */
+  text-align: left;
+  margin-right: 10px;
+}
+
+.result-page p {
+  margin: 10px 0;
+  font-size: 16px;
+  color: #333; /* Chữ màu tối hơn cho dễ đọc */
+}
+
+.result-page strong {
+  color: #ff5722; /* Đổi màu chữ thành cam */
+}
+
+.result-page .payment-btn,
+.result-page button {
+  display: inline-block;
+  width: 100%;
+  padding: 12px 0;
+  background: #d81b60;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.result-page .payment-btn:hover,
+.result-page button:hover {
+  background: #b7154f;
+  transform: translateY(-2px);
+}
+
+.result-page button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .result-page {
+    width: 90%;
+    padding: 15px;
+  }
 }

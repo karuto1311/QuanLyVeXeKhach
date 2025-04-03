@@ -8,7 +8,7 @@ const Result = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
 
-  // Lấy thông tin chuyến xe (ticketDetails) từ localStorage khi component mount
+  // Lấy thông tin chuyến xe từ localStorage khi component mount
   useEffect(() => {
     const storedDetails = localStorage.getItem("tripDetails");
     if (storedDetails) {
@@ -18,7 +18,7 @@ const Result = () => {
   }, []);
 
   // Nếu thanh toán thành công (resultCode === "0") và có ticketDetails,
-  // gọi API để chèn vé vào database
+  // chuyển mảng selectedSeats thành chuỗi và gọi API chèn vé vào database
   useEffect(() => {
     const query = new URLSearchParams(location.search);
     const resultCode = query.get("resultCode");
@@ -30,14 +30,20 @@ const Result = () => {
           ? ticketDetails.selectedSeats.length * ticketDetails.seatPrice
           : ticketDetails.price;
 
+      // Chuyển đổi mảng selectedSeats thành chuỗi, ví dụ "A01, A02, B03"
+      const seatString =
+        ticketDetails.selectedSeats && ticketDetails.selectedSeats.length > 0
+          ? ticketDetails.selectedSeats.join(", ")
+          : "";
+
       const ticketData = {
         maCX: ticketDetails.trip.MaCX,
         maKH: localUser.MaKH,
-        viTriGheNgoi: ticketDetails.selectedSeats,
+        viTriGheNgoi: seatString,
         giaVe: totalAmount,
         trangThai: "Sold",
         hinhThucThanhToan: "Momo",
-        loaiVe: "Tour Du Lich", // hoặc loại vé phù hợp
+        loaiVe: "Tour Du Lich", // hoặc thay đổi theo loại vé thực tế
       };
 
       fetch("http://localhost:8081/api/insert-ticket", {

@@ -3,6 +3,12 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 import "../assets/Css/PaymentBtn.css";
 
+const convertToVietnamTime = (utcDate) => {
+  const date = new Date(utcDate);
+  date.setHours(date.getHours());
+  return date.toLocaleString("vi-VN");
+};
+
 const PaymentBtn = () => {
   const location = useLocation();
   const {
@@ -51,6 +57,10 @@ const PaymentBtn = () => {
       <div>Không có dữ liệu chuyến xe. Vui lòng quay lại và chọn chuyến.</div>
     );
   }
+
+  // Chuyển đổi giờ giấc với thời gian bắt đầu và kết thúc
+  const startFormatted = start ? convertToVietnamTime(start) : "";
+  const endFormatted = end ? convertToVietnamTime(end) : "";
 
   const effectiveSeatPrice = seatPrice || price || 140000;
 
@@ -118,10 +128,10 @@ const PaymentBtn = () => {
           <strong>Điểm đến:</strong> {endPoint}
         </p>
         <p>
-          <strong>Thời gian bắt đầu:</strong> {start}
+          <strong>Thời gian bắt đầu:</strong> {startFormatted}
         </p>
         <p>
-          <strong>Thời gian kết thúc:</strong> {end}
+          <strong>Thời gian kết thúc:</strong> {endFormatted}
         </p>
         <p>
           <strong>Biển số xe:</strong>{" "}
@@ -148,9 +158,6 @@ const PaymentBtn = () => {
         <h3>Thông tin khách hàng</h3>
         {userInfo ? (
           <>
-            {/* <p>
-              <strong>Mã khách hàng:</strong> {userInfo.MaKH}
-            </p> */}
             <p>
               <strong>Họ và Tên:</strong> {userInfo.HoVaTen}
             </p>
